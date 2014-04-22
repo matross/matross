@@ -5,4 +5,5 @@
             :url "https://github.com/matross/matross/blob/master/LICENSE"}
   :main matross.core
   :dependencies [[org.clojure/clojure "1.6.0"]
+                 [me.raynes/conch "0.6.0"]
                  [clj-ssh "0.5.7"]])
