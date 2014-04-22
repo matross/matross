@@ -3,7 +3,7 @@
             [matross.connections.core :refer [IConnection]]))
 
 (defn get-hostname [conn]
-  "localhost")
+  (:hostname conn))
 
 (defn get-command [args]
   "whoami")
