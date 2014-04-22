@@ -57,8 +57,9 @@
   IConnection
 
   (connect [self]
-    (when-not (ssh/connected? ssh-session)
-      (ssh/connect ssh-session)))
+    (or (ssh/connected? ssh-session)
+      (do (ssh/connect ssh-session)
+          (ssh/connected? ssh-session))))
 
   (run [self command] (ssh/ssh ssh-session {:cmd "whoami"}))
 

@@ -1,10 +1,9 @@
 (ns matross.core
-  (:require [matross.connections.ssh :as s]
-            [matross.connections.core :as connection])
+  (:require [matross.connections.ssh :as ssh]
+            [matross.connections.core :refer [run!]])
   (:gen-class))
 
 (defn -main [& args]
-  (let [c (s/ssh-connection {})]
-    (connection/connect c)
-    (prn (connection/run c {}))
-    (connection/disconnect c)))
+  (let [connection (ssh/ssh-connection {})
+        configuration {}]
+    (prn (run! connection configuration))))
