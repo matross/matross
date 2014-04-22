@@ -1,5 +1,6 @@
 (ns matross.connections.ssh
-  (:require [clj-ssh.ssh :as ssh]))
+  (:require [clj-ssh.ssh :as ssh]
+            [matross.connections.core :refer [IConnection]]))
 
 (defn get-hostname [conn]
   "localhost")
@@ -51,11 +52,20 @@
       (format-result (ssh/ssh session {:cmd sudo-command
                                        :in sudo-pass})))))
 
-(defn run [env conn args]
-  (if (validate env conn args)
-    (let [session (create-session conn)
-          command (get-command args)]
-      (ssh/with-connection session
-        (format-result (ssh/ssh session {:cmd command}))))))
+(deftype SSH
+  [conf ssh-session]
+  IConnection
 
+  (connect [self]
+    (when-not (ssh/connected? ssh-session)
+      (ssh/connect ssh-session)))
 
+  (run [self command] (ssh/ssh ssh-session {:cmd "whoami"}))
+
+  (get-file [self file-conf])
+
+  (put-file [self file-conf])
+
+  (disconnect [self] (ssh/disconnect ssh-session)))
+
+(defn ssh-connection [conf] (new SSH conf (create-session conf)))
