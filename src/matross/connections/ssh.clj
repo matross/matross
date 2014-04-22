@@ -34,6 +34,23 @@
     (ssh/add-identity agent (get-identity conn))
     (ssh/session agent host config)))
 
+(defn get-sudo-user [conn]
+  "root")
+
+(defn get-sudo-pass [conn]
+  (let [pass "root"]
+    (str pass "\n")))
+
+(defn run-as-sudo [env conn args]
+  (let [session (create-session conn)
+        command (get-command args)
+        sudo-user (get-sudo-user conn)
+        sudo-pass (get-sudo-pass conn)
+        sudo-command (str "sudo -S -u " sudo-user " " command)]
+    (ssh/with-connection session
+      (format-result (ssh/ssh session {:cmd sudo-command
+                                       :in sudo-pass})))))
+
 (defn run [env conn args]
   (if (validate env conn args)
     (let [session (create-session conn)
