@@ -1,7 +1,6 @@
 (ns matross.connections.ssh
   (:require [clj-ssh.ssh :as ssh]
-            [matross.connections.core :refer [IConnection]]
-            [matross.model.core :refer [get-connection]]))
+            [matross.connections.core :refer [IConnection get-connection]]))
 
 (defn get-hostname [conn]
   (:hostname conn))
@@ -70,7 +69,6 @@
 
   (disconnect [self] (ssh/disconnect ssh-session)))
 
-(defn ssh-connection [conf] (new SSH conf (create-session conf)))
-
 (defmethod get-connection :ssh [spec]
-  (ssh-connection spec))
+  (let [session (create-session spec)]
+    (new SSH spec session)))

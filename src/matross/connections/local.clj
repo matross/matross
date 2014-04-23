@@ -1,7 +1,6 @@
 (ns matross.connections.local
   (:require [me.raynes.conch.low-level :as sh]
-            [matross.connections.core :refer [IConnection]]
-            [matross.model.core :refer [get-connection]]))
+            [matross.connections.core :refer [IConnection get-connection]]))
 
 (deftype Local
   [conf]
@@ -21,7 +20,5 @@
 
   (put-file [self file-conf]))
 
-(defn local-connection [conf] (new Local conf))
-
 (defmethod get-connection :local [spec]
-  (local-connection spec))
+  (new Local spec))

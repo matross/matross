@@ -5,11 +5,11 @@
             [matross.model.core :as model])
   (:gen-class))
 
-(def c {:connections [{:type :ssh :hostname "localhost"}
-                      {:type :ssh :hostname "127.0.0.1"}
-                      {:type :local}]})
+(def config {:connections [{:type :ssh :hostname "localhost"}
+                           {:type :ssh :hostname "127.0.0.1"}
+                           {:type :local}]})
 
 (defn -main [& args]
-  (let [new-c (model/prepare c)
-        derpy-run! (fn [conn] (run! conn {}))]
-    (println (doall (map derpy-run! (:connections new-c))))))
+  (let [{:keys [connections]} (model/prepare config)]
+    (doseq [result (map (partial run! config) connections)]
+      (prn result))))
