@@ -13,9 +13,9 @@
   (run [self command]
     (let [command ["whoami"]
           proc (apply sh/proc command)]
-      {:exit (sh/exit-code proc)
-       :out (sh/stream-to-string proc :out)
-       :err (sh/stream-to-string proc :err)}))
+      {:exit (future (sh/exit-code proc))
+       :out (:out proc)
+       :err (:err proc)}))
 
   (get-file [self file-conf])
 

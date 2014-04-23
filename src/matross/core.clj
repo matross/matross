@@ -1,8 +1,8 @@
 (ns matross.core
   (:require [clojure.tools.cli :refer [parse-opts]]
-            [matross.connections.ssh :as ssh]
-            [matross.connections.local :as local]
-            [matross.connections.core :refer [run!]]
+            [matross.connections.ssh]
+            [matross.connections.local]
+            [matross.connections.core :refer [connect disconnect run]]
             [matross.model.core :as model])
   (:gen-class))
 
@@ -20,10 +20,18 @@
       (-> console (.readPassword padded-prompt nil) String/valueOf)
       (throw (Exception. "Could not find system console.")))))
 
+(defn test-run-connection! [conn test-command]
+  (connect conn)
+  (let [{exit :exit :as result} (run conn test-command)]
+    (prn {:exit @exit
+          :out (me.raynes.conch.low-level/stream-to-string result :out)
+          :err (me.raynes.conch.low-level/stream-to-string result :err)}))
+  (disconnect conn))
+
 (defn -main [& args]
   (let [opts (parse-opts args cli-opts)
         {:keys [connections]} (model/prepare config)]
     (if (get-in opts [:options :help])
       (prn "matross!")
-      (doseq [result (map (partial run! config) connections)]
-        (prn result)))))
+      (doseq [c connections] (test-run-connection! c "whoami")))
+    (shutdown-agents)))

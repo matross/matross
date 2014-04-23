@@ -21,9 +21,3 @@
 
 (defmulti get-connection
   "get a connection instance of a specific type" :type)
-
-(defn run! [opts conn]
-  (try
-    (if (connect conn)
-      (run conn opts))
-    (finally (disconnect conn))))
