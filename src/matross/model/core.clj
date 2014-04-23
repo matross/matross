@@ -1,8 +1,14 @@
 (ns matross.model.core
-  (:require [matross.connections.ssh :as ssh]))
+  (:require [matross.connections.ssh :as ssh]
+            [matross.connections.local :as local]))
+
+(defmulti get-connection :type)
+
+(defmethod get-connection :ssh [spec]
+  (ssh/ssh-connection spec))
+
+(defmethod get-connection :local [spec]
+  (local/local-connection spec))
 
 (defn prepare [conf]
-  (update-in conf [:connections :ssh] (fn [cs] (map ssh/ssh-connection cs))))
-
-(defn get-connections [conf]
-  (mapcat (fn [[k v]] v) (get conf :connections {})))
+  (update-in conf [:connections] (fn [conns] (map get-connection conns))))
