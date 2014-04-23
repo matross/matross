@@ -13,6 +13,13 @@
 (def cli-opts
   [["-h" "--help"]])
 
+(defn get-sensitive-user-input [prompt]
+  (let [console (. System console)
+        padded-prompt (str prompt " ")]
+    (if console
+      (-> console (.readPassword padded-prompt nil) String/valueOf)
+      (throw (Exception. "Could not find system console.")))))
+
 (defn -main [& args]
   (let [opts (parse-opts args cli-opts)
         {:keys [connections]} (model/prepare config)]
