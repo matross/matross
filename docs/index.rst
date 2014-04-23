@@ -1,9 +1,13 @@
 .. http://sphinx-doc.org/rest.html
 
-docs
+matross
 ===================================
 
-Not a lot here yet...
+a thing
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+
+   getting_started
+   design_goals
+   contributing

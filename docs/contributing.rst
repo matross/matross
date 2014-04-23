@@ -1,0 +1,4 @@
+Contributing
+============
+
+Use the githubs!
