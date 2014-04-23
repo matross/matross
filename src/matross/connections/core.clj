@@ -1,14 +1,15 @@
 (ns matross.connections.core)
 
-(defprotocol IConnection
+(defprotocol IConnect
   "Interface for matross connections"
 
   (connect [self]
     "connect to a machine")
 
   (disconnect [self]
-    "disconnect from a machine")
+    "disconnect from a machine"))
 
+(defprotocol IInteract
   (run [self opts]
     "execute a command on a machine")
 

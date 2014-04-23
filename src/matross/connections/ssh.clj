@@ -1,6 +1,6 @@
 (ns matross.connections.ssh
   (:require [clj-ssh.ssh :as ssh]
-            [matross.connections.core :refer [IConnection get-connection]]))
+            [matross.connections.core :refer [IInteract IConnect get-connection]]))
 
 (defn get-hostname [conn]
   (:hostname conn))
@@ -54,20 +54,19 @@
 
 (deftype SSH
   [conf ssh-session]
-  IConnection
-
+  IConnect
   (connect [self]
     (or (ssh/connected? ssh-session)
       (do (ssh/connect ssh-session)
           (ssh/connected? ssh-session))))
+  (disconnect [self] (ssh/disconnect ssh-session))
 
+  IInteract
   (run [self command] (ssh/ssh ssh-session {:cmd "whoami"}))
 
   (get-file [self file-conf])
 
-  (put-file [self file-conf])
-
-  (disconnect [self] (ssh/disconnect ssh-session)))
+  (put-file [self file-conf]))
 
 (defmethod get-connection :ssh [spec]
   (let [session (create-session spec)]

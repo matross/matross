@@ -1,14 +1,15 @@
 (ns matross.connections.local
   (:require [me.raynes.conch.low-level :as sh]
-            [matross.connections.core :refer [IConnection get-connection]]))
+            [matross.connections.core :refer [IConnect IInteract get-connection]]))
 
 (deftype Local
   [conf]
-  IConnection
 
+  IConnect
   (connect [self] true)
   (disconnect [self] true)
 
+  IInteract
   (run [self command]
     (let [command ["whoami"]
           proc (apply sh/proc command)]
