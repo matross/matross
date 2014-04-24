@@ -22,7 +22,7 @@
 
 (defn test-run-connection! [conn test-command]
   (connect conn)
-  (let [{exit :exit :as result} (run conn test-command)]
+  (let [{exit :exit :as result} (run conn {:cmd [test-command]})]
     (prn {:exit @exit
           :out (me.raynes.conch.low-level/stream-to-string result :out)
           :err (me.raynes.conch.low-level/stream-to-string result :err)}))

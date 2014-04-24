@@ -37,9 +37,11 @@
   (disconnect [self] (ssh/disconnect ssh-session))
 
   IRun
-  (run [self command]
-    (let [in "" opts {}]
-      (ssh-exec ssh-session "whoami" in opts)))
+  (run [self {:keys [cmd in] :as opts}]
+    (let [command (clojure.string/join " " cmd)
+          in (or in "")
+          opts (dissoc opts :in :cmd)]
+      (ssh-exec ssh-session command in opts)))
 
   ITransfer
   (get-file [self file-conf])

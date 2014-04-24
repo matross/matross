@@ -10,12 +10,13 @@
   (disconnect [self] true)
 
   IRun
-  (run [self command]
+  (run [self {:keys [cmd in] :as opts}]
     (let [command ["whoami"]
-          proc (apply sh/proc command)]
+          {:keys [in out err] :as proc} (apply sh/proc cmd)]
+      ;; todo: write user provided in to process in
       {:exit (future (sh/exit-code proc))
-       :out (:out proc)
-       :err (:err proc)}))
+       :out out
+       :err err}))
 
   ITransfer
   (get-file [self file-conf])
