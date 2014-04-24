@@ -24,7 +24,7 @@
 (defn test-run-connection! [conn test-command pass]
   (connect conn)
   (let [conn (if pass (sudo-runner conn "root" pass) conn)]
-    (let [{exit :exit :as result} (run conn {:cmd [test-command]})]
+    (let [{exit :exit :as result} (run conn {:cmd test-command})]
       (prn {:exit @exit
             :out (me.raynes.conch.low-level/stream-to-string result :out)
             :err (me.raynes.conch.low-level/stream-to-string result :err)})))
@@ -33,8 +33,9 @@
 (defn -main [& args]
   (let [opts (parse-opts args cli-opts)
         {:keys [connections]} (model/prepare config)
-        password (if (get-in opts [:options :ask-sudo-pass]) (get-sensitive-user-input "Sudo Password"))]
+        password (if (get-in opts [:options :ask-sudo-pass])
+                   (get-sensitive-user-input "Sudo Password"))]
     (if (get-in opts [:options :help])
       (prn "matross!")
-      (doseq [c connections] (test-run-connection! c "whoami" password)))
+      (doseq [c connections] (test-run-connection! c ["whoami"] password)))
     (shutdown-agents)))

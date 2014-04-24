@@ -25,7 +25,8 @@
   (let [dest-path (expand-home dest)]
     (if-not (exists? dest-path)
       (let [dest-file (file dest-path)
-            proc (run conn {:cmd ["/bin/sh" "-c" (str "cat " src)]})]
+            cat (str "cat " src)
+            proc (run conn {:cmd ["/bin/sh" "-c" cat]})]
         (stream-to proc :out dest-file)
         (if (exists? dest-path)
           dest
