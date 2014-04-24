@@ -1,6 +1,6 @@
 (ns matross.connections.ssh
   (:require [clj-ssh.ssh :as ssh]
-            [matross.connections.core :refer [IConnect IRun ITransfer get-connection]])
+            [matross.connections.core :refer [IConnect IRun get-connection]])
   (:import [java.io ByteArrayInputStream PipedInputStream PipedOutputStream]
            [com.jcraft.jsch Session ChannelExec]))
 
@@ -27,6 +27,13 @@
     (ssh/add-identity agent (get-identity conn))
     (ssh/session agent host config)))
 
+(defn auto-quote [part]
+  ;; insanely hacky auto-quote function...
+  ;; how sophisticated would this need to be?
+  (if (re-find #" " part)
+    (str "'" part "'")
+    part))
+
 (deftype SSH
   [conf ssh-session]
   IConnect
@@ -38,15 +45,10 @@
 
   IRun
   (run [self {:keys [cmd in] :as opts}]
-    (let [command (clojure.string/join " " cmd)
+    (let [command (clojure.string/join " " (map auto-quote cmd))
           in (or in "")
           opts (dissoc opts :in :cmd)]
-      (ssh-exec ssh-session command in opts)))
-
-  ITransfer
-  (get-file [self file-conf])
-
-  (put-file [self file-conf]))
+      (ssh-exec ssh-session command in opts))))
 
 (defmethod get-connection :ssh [spec]
   (let [session (create-session spec)]

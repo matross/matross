@@ -1,9 +1,8 @@
 (ns matross.connections.local
   (:require [me.raynes.conch.low-level :as sh]
-            [matross.connections.core :refer [IConnect IRun ITransfer get-connection]]))
+            [matross.connections.core :refer [IConnect IRun get-connection]]))
 
-(deftype Local
-  [conf]
+(deftype Local [conf]
 
   IConnect
   (connect [self] true)
@@ -11,17 +10,14 @@
 
   IRun
   (run [self {:keys [cmd in] :as opts}]
-    (let [command ["whoami"]
-          {:keys [in out err] :as proc} (apply sh/proc cmd)]
-      ;; todo: write user provided in to process in
+    (let [{:keys [out err] :as proc} (apply sh/proc cmd)]
+      (when in
+        (clojure.java.io/copy in (:in proc))
+        (.close (:in proc)))
+
       {:exit (future (sh/exit-code proc))
        :out out
-       :err err}))
-
-  ITransfer
-  (get-file [self file-conf])
-
-  (put-file [self file-conf]))
+       :err err})))
 
 (defmethod get-connection :local [spec]
   (new Local spec))
