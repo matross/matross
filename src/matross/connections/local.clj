@@ -12,8 +12,8 @@
   (run [self {:keys [cmd in] :as opts}]
     (let [{:keys [out err] :as proc} (apply sh/proc cmd)]
       (when in
-        (clojure.java.io/copy in (:in proc))
-        (.close (:in proc)))
+        (with-open [stream (:in proc)]
+          (clojure.java.io/copy in (:in proc))))
 
       {:exit (future (sh/exit-code proc))
        :out out

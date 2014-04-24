@@ -1,10 +1,6 @@
 (ns matross.connections.ssh
   (:require [clj-ssh.ssh :as ssh]
-            [matross.connections.core :refer [IConnect IRun get-connection]])
-  (:import [java.io ByteArrayInputStream PipedInputStream PipedOutputStream]
-           [com.jcraft.jsch Session ChannelExec]))
-
-(declare ssh-exec)
+            [matross.connections.core :refer [IConnect IRun get-connection]]))
 
 (defn get-ssh-config [conn]
   ;; supported all configuration supported by `ssh -o`
@@ -47,44 +43,17 @@
   (run [self {:keys [cmd in] :as opts}]
     (let [command (clojure.string/join " " (map auto-quote cmd))
           in (or in "")
-          opts (dissoc opts :in :cmd)]
-      (ssh-exec ssh-session command in opts))))
+          {:keys [channel out-stream err-stream]}
+            (ssh/ssh-exec ssh-session command in :stream nil)]
+      {:out out-stream
+       :err err-stream
+       :exit (future
+               (while (ssh/connected-channel? channel)
+                 (Thread/sleep 100))
+               (let [exit (.getExitStatus channel)]
+                 (ssh/disconnect-channel channel)
+                 exit))})))
 
 (defmethod get-connection :ssh [spec]
   (let [session (create-session spec)]
     (new SSH spec session)))
-
-(defn- streams-for-out []
-  (let [os (PipedOutputStream.)]
-    [os (PipedInputStream. os (int (* 1024 10)))]))
-
-(defn- ssh-exec
-  ;; modified version of https://github.com/hugoduncan/clj-ssh/blob/0.5.9/src/clj_ssh/ssh.clj#L624
-  [^Session session cmd stdin opts]
-  (let [^ChannelExec exec (ssh/open-channel session :exec)
-        [os out-stream] (streams-for-out)
-        [es err-stream] (streams-for-out)]
-    (doto exec
-      (.setInputStream
-       (if (string? stdin)
-         (ByteArrayInputStream. (.getBytes stdin))
-         stdin)
-       false)
-      (.setOutputStream os)
-      (.setErrStream es)
-      (.setCommand cmd))
-    (when (contains? opts :env)
-      (doseq [[k v] (:env opts)]
-        (.setEnv exec (str k) (str v))))
-    (ssh/connect-channel exec)
-    {:exit (future
-             (while (ssh/connected-channel? exec)
-               (Thread/sleep 100))
-             (let [exit (.getExitStatus exec)]
-               (ssh/disconnect-channel exec)
-               (.close os)
-               (.close es)
-               exit))
-     :in stdin
-     :out out-stream
-     :err err-stream}))
