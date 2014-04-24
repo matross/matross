@@ -1,4 +1,5 @@
-(ns matross.connections.core)
+(ns matross.connections.core
+  (:import [java.io SequenceInputStream ByteArrayInputStream]))
 
 (defprotocol IConnect
   "Interface for matross connections"
@@ -22,3 +23,15 @@
 
 (defmulti get-connection
   "get a connection instance of a specific type" :type)
+
+(deftype SudoRunner
+  [runner user password]
+  IRun
+  (run [self opts]
+    (let [pw-stream (ByteArrayInputStream. (.getBytes (str password "\n")))]
+    (run runner (-> opts
+                    (update-in [:cmd] #(apply conj ["sudo" "-S" "-u" user] %1))
+                    (update-in [:in] #(SequenceInputStream. pw-stream %1)))))))
+
+(defn sudo-runner [runner user opts]
+  (new SudoRunner runner user opts))
