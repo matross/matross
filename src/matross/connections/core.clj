@@ -28,7 +28,7 @@
 (defn verify-sudo-state [conn]
   ;; here we can do things like kill the cache
   ;; verify a password is needed, the pass is correct, etc
-  (let [proc (run conn {:cmd ["sudo" "-k"]})]
+  (let [proc (run conn {:cmd ["sudo" "-K"]})]
     (= @(:exit proc) 0)))
 
 (defn sudo-command [command user]
