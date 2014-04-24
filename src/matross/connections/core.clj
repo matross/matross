@@ -25,10 +25,16 @@
     left
     (new SequenceInputStream left right)))
 
+(defn verify-sudo-state [conn]
+  ;; here we can do things like kill the cache
+  ;; verify a password is needed, the pass is correct, etc
+  (let [proc (run conn {:cmd ["sudo" "-k"]})]
+    (= @(:exit proc) 0)))
+
 (defn sudo-command [command user]
   ;; sudo accepts password over stdin but does not strip it
   ;; in all cases of passwordless sudo (cached pw, nopasswd, etc)
-  (apply conj ["sudo" "-S" "-u" user "-H"] command))
+  (apply conj ["sudo" "-S" "-u" user "-H" "-k" "--"] command))
 
 (deftype SudoRunner
   [runner user password]
@@ -41,4 +47,7 @@
       (run runner opts))))
 
 (defn sudo-runner [runner user password]
-  (new SudoRunner runner user password))
+  ;; expects runner to be connected
+  ;; will try to run and kill sudo cache
+  (let [runner (new SudoRunner runner user password)]
+    (doto runner verify-sudo-state)))
