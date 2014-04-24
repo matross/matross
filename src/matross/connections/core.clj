@@ -21,10 +21,13 @@
   [runner user password]
   IRun
   (run [self opts]
-    (let [pw-stream (ByteArrayInputStream. (.getBytes (str password "\n")))]
-    (run runner (-> opts
-                    (update-in [:cmd] #(apply conj ["sudo" "-S" "-u" user] %1))
-                    (update-in [:in] #(SequenceInputStream. pw-stream %1)))))))
+    (let [pw-stream (ByteArrayInputStream. (.getBytes (str password "\n")))
+          opts (-> opts
+                   (update-in [:cmd] #(apply conj ["sudo" "-S" "-u" user "-H"] %1))
+                   (update-in [:in] #(if %1
+                                      (SequenceInputStream. pw-stream %1)
+                                      pw-stream)))]
+      (run runner opts))))
 
-(defn sudo-runner [runner user opts]
-  (new SudoRunner runner user opts))
+(defn sudo-runner [runner user password]
+  (new SudoRunner runner user password))
