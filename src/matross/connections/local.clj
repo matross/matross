@@ -1,6 +1,6 @@
 (ns matross.connections.local
   (:require [me.raynes.conch.low-level :as sh]
-            [matross.connections.core :refer [IConnect IInteract get-connection]]))
+            [matross.connections.core :refer [IConnect IRun ITransfer get-connection]]))
 
 (deftype Local
   [conf]
@@ -9,7 +9,7 @@
   (connect [self] true)
   (disconnect [self] true)
 
-  IInteract
+  IRun
   (run [self command]
     (let [command ["whoami"]
           proc (apply sh/proc command)]
@@ -17,6 +17,7 @@
        :out (:out proc)
        :err (:err proc)}))
 
+  ITransfer
   (get-file [self file-conf])
 
   (put-file [self file-conf]))

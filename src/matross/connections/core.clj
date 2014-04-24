@@ -9,10 +9,11 @@
   (disconnect [self]
     "disconnect from a machine"))
 
-(defprotocol IInteract
+(defprotocol IRun
   (run [self opts]
-    "execute a command on a machine")
+    "execute a command on a machine"))
 
+(defprotocol ITransfer
   (get-file [self opts]
     "get a file from a machine")
 
