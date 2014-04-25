@@ -34,7 +34,7 @@
 (defn sudo-command [command user]
   ;; sudo accepts password over stdin but does not strip it
   ;; in all cases of passwordless sudo (cached pw, nopasswd, etc)
-  (apply conj ["sudo" "-S" "-u" user "-H" "-k" "--"] command))
+  (apply conj ["sudo" "-S" "-u" user "-H" "-k" "-p" "::matross::" "--"] command))
 
 (deftype SudoRunner
   [runner user password]
