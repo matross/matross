@@ -21,7 +21,7 @@
   (apply load-plugins (map resource-to-path dirnames)))
 
 (defn load-plugins! []
-  (load-resource-plugins "plugins/connections"))
+  (load-resource-plugins "plugins/connections" "plugins/tasks"))
 
 (def config {:connections [{:type :ssh :hostname "localhost"}
                            {:type :ssh :hostname "127.0.0.1"}
