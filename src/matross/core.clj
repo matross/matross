@@ -3,6 +3,8 @@
             [me.raynes.fs :as fs]
             [matross.connections.default :refer [debug-process]]
             [matross.connections.core :refer [connect disconnect run sudo-runner]]
+            [matross.tasks.core :refer [get-module exec]]
+            [matross.tasks.command]
             [matross.model.core :as model])
   (:gen-class))
 
@@ -36,15 +38,14 @@
       (-> console (.readPassword padded-prompt nil) String/valueOf)
       (throw (Exception. "Could not find system console.")))))
 
-(defn test-run-connection! [conn test-command pass]
+(defn test-run-connection! [conn module conf pass]
   (connect conn)
   (let [conn (if pass (sudo-runner conn "root" pass) conn)]
-    (let [{exit :exit :as result} (run conn {:cmd test-command})]
+    (let [{exit :exit :as result} (exec module {:remote conn} conf)]
       (debug-process result)))
   (disconnect conn))
 
 (defn -main [& args]
-  (println "INVOKING MAIN")
   (load-plugins!)
   (let [opts (parse-opts args cli-opts)
         {:keys [connections]} (model/prepare config)
@@ -52,5 +53,7 @@
                    (get-sensitive-user-input "Sudo Password"))]
     (if (get-in opts [:options :help])
       (prn "matross!")
-      (doseq [c connections] (test-run-connection! c ["whoami"] password)))
+      (let [m (get-module :command)
+            cmd {:env {:HERP "value"} :command "echo $HERP"}]
+      (doseq [c connections] (test-run-connection! c m cmd password))))
     (shutdown-agents)))
