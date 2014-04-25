@@ -1,10 +1,25 @@
 (ns matross.core
   (:require [clojure.tools.cli :refer [parse-opts]]
-            [matross.connections.ssh]
-            [matross.connections.local]
+            [me.raynes.fs :as fs]
+            [matross.connections.default :refer [debug-process]]
             [matross.connections.core :refer [connect disconnect run sudo-runner]]
             [matross.model.core :as model])
   (:gen-class))
+
+(defn load-plugins [& dirnames]
+  "Loads all the clojure files in a directory"
+  (doseq [dir dirnames]
+    (doseq [file (fs/find-files dir #".*\.clj")]
+      (-> file .getAbsolutePath load-file))))
+
+(defn resource-to-path [path]
+  (.getPath (clojure.java.io/resource path)))
+
+(defn load-resource-plugins [& dirnames]
+  (apply load-plugins (map resource-to-path dirnames)))
+
+(defn load-plugins! []
+  (load-resource-plugins "plugins/connections"))
 
 (def config {:connections [{:type :ssh :hostname "localhost"}
                            {:type :ssh :hostname "127.0.0.1"}
@@ -25,12 +40,12 @@
   (connect conn)
   (let [conn (if pass (sudo-runner conn "root" pass) conn)]
     (let [{exit :exit :as result} (run conn {:cmd test-command})]
-      (prn {:exit @exit
-            :out (me.raynes.conch.low-level/stream-to-string result :out)
-            :err (me.raynes.conch.low-level/stream-to-string result :err)})))
+      (debug-process result)))
   (disconnect conn))
 
 (defn -main [& args]
+  (println "INVOKING MAIN")
+  (load-plugins!)
   (let [opts (parse-opts args cli-opts)
         {:keys [connections]} (model/prepare config)
         password (if (get-in opts [:options :ask-sudo-pass])
