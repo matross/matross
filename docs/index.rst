@@ -3,10 +3,10 @@
 matross
 ===================================
 
-a thing
+remote process gun
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    getting_started
    design_goals

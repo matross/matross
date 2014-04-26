@@ -1,4 +1,4 @@
-Connection Plugins
+Connection Modules
 ==================
 
 Connections are core to the design and operation of matross. Using a
@@ -56,9 +56,9 @@ the process exit status.
      :err  InputStream
      :exit FutureExitCode }
 
-============================
-Registering Connection Types
-============================
+=======================
+Registering Connections
+=======================
 
 In order to register with the matross runner a connection must
 implement the ``get-connection`` multimethod.
