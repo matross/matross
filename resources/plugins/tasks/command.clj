@@ -2,13 +2,20 @@
   (:require [matross.tasks.core :refer [get-module ITask]]
             [matross.connections.core :refer [run]]))
 
-(defn format-env [m]
-  (map (fn [[k v]] (str (name k) "=" v)) m))
+(defn key=val [[key val]]
+  (str (name key) "=" val))
 
-(defmethod get-module :command [t]
-  (reify ITask
-    (exec [self {:keys [remote]} conf]
-      (let [cmd (concat ["/usr/bin/env" "-i"]
-                        (format-env (:env conf))
-                        [(get conf :shell "/bin/sh") "-c" (:command conf)])]
-        (run remote {:cmd cmd})))))
+(defn format-env [env]
+  (map key=val env))
+
+(deftype Command [spec]
+  ITask
+  (exec [self conn]
+    (let [{:keys [command shell env]} spec
+          shell (or shell "/bin/sh")
+          cmd (concat ["/usr/bin/env" "-i"] (format-env env)
+                      [shell "-c" command])]
+      (run conn {:cmd cmd}))))
+
+(defmethod get-module :command [spec]
+  (new Command spec))

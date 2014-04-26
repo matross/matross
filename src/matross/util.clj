@@ -1,7 +1,8 @@
 (ns matross.util
   (:require [me.raynes.fs :as fs]
             [me.raynes.conch.low-level :refer [stream-to-string]]
-            [matross.connections.core :refer [connect disconnect run sudo-runner]]
+            [matross.connections.core :refer [connect disconnect run]]
+            [matross.connections.sudo :refer [sudo-runner]]
             [matross.tasks.core :refer [get-module exec]]))
 
 ;; junk namespace... needs re-org
@@ -21,28 +22,29 @@
   (load-resource-plugins "plugins/connections" "plugins/tasks"))
 
 (defn get-sensitive-user-input [prompt]
-  (let [console (. System console)
+  (let [console (System/console)
         padded-prompt (str prompt " ")]
     (if console
       (-> console (.readPassword padded-prompt nil) String/valueOf)
-      (throw (Exception. "Could not find system console.")))))
+      (throw (new Exception "Could not find system console.")))))
 
 (defn debug-process [{:keys [exit] :as proc}]
   (prn {:exit @exit
         :out (stream-to-string proc :out)
         :err (stream-to-string proc :err)}))
 
-(def ^:private sudo-password (atom nil))
-(defn get-sudo-password []
-  (or @sudo-password
-      (reset! sudo-password (get-sensitive-user-input "sudo password:"))))
+(let [sudo-password (atom nil)]
+  (defn get-sudo-password []
+    (or @sudo-password
+      (let [pw (get-sensitive-user-input "sudo password:")]
+        (reset! sudo-password pw)))))
 
-(defn test-run-connection! [cli-opts conn mod-type conf]
+(defn test-run-connection! [cli-opts conn task]
   (connect conn)
-  (let [pass (if (get-in cli-opts [:options :ask-sudo-pass])
+  (let [module (get-module task)
+        pass (if (get-in cli-opts [:options :ask-sudo-pass])
                (get-sudo-password))
-        module (get-module mod-type)
         conn (if pass (sudo-runner conn "root" pass) conn)]
-    (let [result (exec module {:remote conn} conf)]
+    (let [result (exec module conn)]
       (debug-process result)))
   (disconnect conn))

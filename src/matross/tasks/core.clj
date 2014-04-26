@@ -1,7 +1,7 @@
 (ns matross.tasks.core)
 
-(defmulti get-module identity)
+(defmulti get-module :type)
 
 (defprotocol ITask
   "How to run tasks"
-  (exec [self conns conf]))
+  (exec [self conn]))

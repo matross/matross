@@ -12,14 +12,18 @@
   [["-h" "--help"]
    ["-K" "--ask-sudo-pass"]])
 
+(defn display-help []
+  (prn "matross!"))
+
 (defn -main [& args]
   (load-plugins!)
   (let [opts (parse-opts args cli-opts)
         {:keys [connections]} (model/prepare config)]
     (if (get-in opts [:options :help])
-      (prn "matross!")
-      (let [command {:env {:test "it works!"}
-                     :command "echo $test"}]
+      (display-help)
+      (let [command {:type :command
+                     :env {:test "it works!"}
+                     :command "/bin/echo -n $test"}]
         (doseq [conn connections]
-          (test-run-connection! opts conn :command command))))
-    (shutdown-agents)))
+          (test-run-connection! opts conn command))
+        (shutdown-agents)))))
