@@ -1,6 +1,6 @@
 (ns matross.tasks.put-file
   (:require [me.raynes.fs :refer (file exists? expand-home)]
-            [matross.tasks.core :refer [get-task ITask]]
+            [matross.tasks.core :refer [task-result get-task ITask]]
             [matross.connections.core :refer [run]])
   (:import [java.io FileInputStream]))
 
@@ -14,8 +14,8 @@
               cat (str "cat > " dest "")
               opts {:cmd ["/bin/sh" "-c" cat] :in file-stream}
               {:keys [exit] :as proc} (run conn opts)]
-          (if (= @exit 0)
-            dest))))))
+          (task-result (= 0 @exit) true {}))
+        (task-result false false {})))))
 
 (defmethod get-task :put-file [spec]
    (new PutFile spec))

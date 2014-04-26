@@ -1,5 +1,5 @@
 (ns matross.tasks.command
-  (:require [matross.tasks.core :refer [get-task ITask]]
+  (:require [matross.tasks.core :refer [task-result get-task ITask]]
             [matross.connections.core :refer [run]]))
 
 (defn key=val [[key val]]
@@ -14,8 +14,10 @@
     (let [{:keys [command shell env]} spec
           shell (or shell "/bin/sh")
           cmd (concat ["/usr/bin/env" "-i"] (format-env env)
-                      [shell "-c" command])]
-      (run conn {:cmd cmd}))))
+                      [shell "-c" command])
+          cmd-result (run conn {:cmd cmd})]
+      (task-result (= 0 @(:exit cmd-result)) true cmd-result)
+      )))
 
 (defmethod get-task :command [spec]
   (new Command spec))

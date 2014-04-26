@@ -2,11 +2,11 @@
 
 (defmulti get-task :type)
 
-(defrecord TaskResult [conf succeeded? changed? data])
+(defrecord TaskResult [succeeded? changed? data])
 
 (defprotocol ITask
   "How to run tasks"
   (exec [self conn]))
 
-(defn task-result [conf succeeded? changed? data]
-  (TaskResult. conf succeeded? changed? data))
+(defn task-result [succeeded? changed? data]
+  (TaskResult. succeeded? changed? data))

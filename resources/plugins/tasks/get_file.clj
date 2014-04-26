@@ -1,6 +1,6 @@
 (ns matross.tasks.get-file
   (:require [matross.connections.core :refer [run]]
-            [matross.tasks.core :refer [get-task ITask]]
+            [matross.tasks.core :refer [task-result get-task ITask]]
             [me.raynes.conch.low-level :refer (stream-to)]
             [me.raynes.fs :refer (file exists? expand-home)]))
 
@@ -14,8 +14,8 @@
               cat (str "cat " src)
               proc (run conn {:cmd ["/bin/sh" "-c" cat]})]
           (stream-to proc :out dest-file)
-          (if (exists? dest-path)
-            dest))))))
+          (task-result (= 0 @(:exit proc)) true {}))
+        (task-result false false {})))))
 
 (defmethod get-task :get-file [spec]
   (new GetFile spec))

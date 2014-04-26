@@ -46,5 +46,5 @@
                (get-sudo-password))
         conn (if pass (sudo-runner conn "root" pass) conn)]
     (let [result (exec module conn)]
-      (debug-process result)))
+      (println result)))
   (disconnect conn))
