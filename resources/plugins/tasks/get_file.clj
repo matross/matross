@@ -1,6 +1,6 @@
 (ns matross.tasks.get-file
   (:require [matross.connections.core :refer [run]]
-            [matross.tasks.core :refer [get-module ITask]]
+            [matross.tasks.core :refer [get-task ITask]]
             [me.raynes.conch.low-level :refer (stream-to)]
             [me.raynes.fs :refer (file exists? expand-home)]))
 
@@ -17,5 +17,5 @@
           (if (exists? dest-path)
             dest))))))
 
-(defmethod get-module :get-file [spec]
+(defmethod get-task :get-file [spec]
   (new GetFile spec))

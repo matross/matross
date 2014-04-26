@@ -1,6 +1,6 @@
 (ns matross.tasks.put-file
   (:require [me.raynes.fs :refer (file exists? expand-home)]
-            [matross.tasks.core :refer [get-module ITask]]
+            [matross.tasks.core :refer [get-task ITask]]
             [matross.connections.core :refer [run]])
   (:import [java.io FileInputStream]))
 
@@ -17,5 +17,5 @@
           (if (= @exit 0)
             dest))))))
 
-(defmethod get-module :put-file [spec]
+(defmethod get-task :put-file [spec]
    (new PutFile spec))

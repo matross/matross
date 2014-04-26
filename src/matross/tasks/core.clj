@@ -1,6 +1,6 @@
 (ns matross.tasks.core)
 
-(defmulti get-module :type)
+(defmulti get-task :type)
 
 (defrecord TaskResult [conf succeeded? changed? data])
 

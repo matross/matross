@@ -1,5 +1,5 @@
 (ns matross.tasks.command
-  (:require [matross.tasks.core :refer [get-module ITask]]
+  (:require [matross.tasks.core :refer [get-task ITask]]
             [matross.connections.core :refer [run]]))
 
 (defn key=val [[key val]]
@@ -17,5 +17,5 @@
                       [shell "-c" command])]
       (run conn {:cmd cmd}))))
 
-(defmethod get-module :command [spec]
+(defmethod get-task :command [spec]
   (new Command spec))

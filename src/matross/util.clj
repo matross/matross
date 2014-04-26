@@ -3,7 +3,7 @@
             [me.raynes.conch.low-level :refer [stream-to-string]]
             [matross.connections.core :refer [connect disconnect run]]
             [matross.connections.sudo :refer [sudo-runner]]
-            [matross.tasks.core :refer [get-module exec]]))
+            [matross.tasks.core :refer [get-task exec]]))
 
 ;; junk namespace... needs re-org
 (defn load-plugins [& dirnames]
@@ -41,7 +41,7 @@
 
 (defn test-run-connection! [cli-opts conn task]
   (connect conn)
-  (let [module (get-module task)
+  (let [module (get-task task)
         pass (if (get-in cli-opts [:options :ask-sudo-pass])
                (get-sudo-password))
         conn (if pass (sudo-runner conn "root" pass) conn)]
