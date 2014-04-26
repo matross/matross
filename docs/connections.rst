@@ -81,3 +81,14 @@ the example above).
    { :type :docker :image "ubuntu" }
 
 The docker connection type doesn't exist, you should implement it!
+
+==================
+External Resources
+==================
+
+- `Connection Interface`_
+- `Local Connection`__
+
+.. _Connection Interface: https://github.com/matross/matross/blob/master/src/matross/connections/core.clj
+
+__ https://github.com/matross/matross/blob/master/resources/plugins/connections/local.clj
