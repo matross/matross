@@ -3,6 +3,14 @@ Task Modules
 
 It'd be nice if this were documented, wouldn't it?
 
+.. toctree::
+   :maxdepth: 1
+
+   task_modules/command
+   task_modules/get_file
+   task_modules/put_file
+
+
 ==================
 External Resources
 ==================
