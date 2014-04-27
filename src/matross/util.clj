@@ -12,14 +12,8 @@
     (doseq [file (fs/find-files dir #".*\.clj")]
       (-> file .getAbsolutePath load-file))))
 
-(defn resource-to-path [path]
-  (.getPath (clojure.java.io/resource path)))
-
-(defn load-resource-plugins [& dirnames]
-  (apply load-plugins (map resource-to-path dirnames)))
-
 (defn load-plugins! []
-  (load-resource-plugins "plugins/connections" "plugins/tasks"))
+  (load-plugins "modules/connections" "modules/tasks"))
 
 (defn get-sensitive-user-input [prompt]
   (let [console (System/console)
