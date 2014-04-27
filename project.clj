@@ -6,6 +6,7 @@
   :main matross.core
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.cli "0.3.1"]
+                 [com.cemerick/pomegranate "0.3.0"]
                  [me.raynes/conch "0.6.0"]
                  [me.raynes/fs "1.4.5"]
                  [clj-ssh "0.5.7"]])

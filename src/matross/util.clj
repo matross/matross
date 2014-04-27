@@ -1,6 +1,7 @@
 (ns matross.util
   (:require [me.raynes.fs :as fs]
             [me.raynes.conch.low-level :refer [stream-to-string]]
+            [cemerick.pomegranate :as pom]
             [matross.connections.core :refer [connect disconnect run]]
             [matross.connections.sudo :refer [sudo-runner]]
             [matross.tasks.core :refer [get-task exec]]))
@@ -13,7 +14,10 @@
       (-> file .getAbsolutePath load-file))))
 
 (defn load-plugins! []
-  (load-plugins "modules/connections" "modules/tasks"))
+  (let [plugins-dir "plugins"
+        dir (partial fs/file plugins-dir "matross")]
+    (pom/add-classpath plugins-dir)
+    (load-plugins (dir "connections") (dir "tasks"))))
 
 (defn get-sensitive-user-input [prompt]
   (let [console (System/console)
