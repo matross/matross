@@ -17,6 +17,8 @@ Here are a few specific ways that *you* could help:
 .. _issues: https://github.com/matross/matross/issues
 .. _patches: https://github.com/matross/matross/pulls
 
+If a user is confused matross has a bug.
+
 =================
 Extending Matross
 =================
