@@ -1,5 +1,5 @@
 (ns matross.connections.sudo
-  (:require [matross.connections.core :refer [IRun run]])
+  (:require [matross.connections.core :refer [IRun run IConnect connect disconnect]])
   (:import [java.io SequenceInputStream ByteArrayInputStream]))
 
 (defn str-to-stream [& s]
@@ -10,20 +10,16 @@
     left
     (new SequenceInputStream left right)))
 
-(defn verify-sudo-state [conn]
-  ;; here we can do things like kill the cache
-  ;; verify a password is needed, the pass is correct, etc
-  (let [proc (run conn {:cmd ["sudo" "-K"]})]
-    (when (zero? (-> proc :exit deref))
-       conn)))
-
 (defn sudo-command [command user]
   ;; sudo accepts password over stdin but does not strip it
   ;; in all cases of passwordless sudo (cached pw, nopasswd, etc)
   (apply conj ["sudo" "-k" "-S" "-p" "::matross-sudo::" "-u" user "-H" "--"] command))
 
-(deftype SudoRunner
+(deftype SudoConnection
   [runner user password]
+  IConnect
+  (connect [self] (connect runner))
+  (disconnect [self] (disconnect runner))
   IRun
   (run [self opts]
     (let [pw-stream (str-to-stream password "\n")
@@ -32,8 +28,13 @@
                    (update-in [:in] concat-streams pw-stream))]
       (run runner opts))))
 
-(defn sudo-runner [runner user password]
-  ;; expects runner to be connected
-  ;; will try to run and kill sudo cache
-  (let [runner (new SudoRunner runner user password)]
-    (verify-sudo-state runner)))
+(defn get-sudo-connection [conn {:keys [sudo-user sudo-pass]}]
+  (new SudoConnection conn sudo-user sudo-pass))
+
+(defn sudo? [conn] (isa? conn SudoConnection))
+(defn verify-sudo-connection! [conn]
+  ;; here we can do things like kill the cache
+  ;; verify a password is needed, the pass is correct, etc
+  (let [proc (run conn {:cmd ["sudo" "-K"]})]
+    (when (zero? (-> proc :exit deref))
+       conn)))

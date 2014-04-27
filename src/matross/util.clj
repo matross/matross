@@ -3,7 +3,6 @@
             [me.raynes.conch.low-level :refer [stream-to-string]]
             [cemerick.pomegranate :as pom]
             [matross.connections.core :refer [connect disconnect run]]
-            [matross.connections.sudo :refer [sudo-runner]]
             [matross.tasks.core :refer [get-task exec]]))
 
 ;; junk namespace... needs re-org
@@ -31,18 +30,10 @@
         :out (stream-to-string proc :out)
         :err (stream-to-string proc :err)}))
 
-(let [sudo-password (atom nil)]
-  (defn get-sudo-password []
-    (or @sudo-password
-      (let [pw (get-sensitive-user-input "sudo password:")]
-        (reset! sudo-password pw)))))
-
-(defn test-run-connection! [cli-opts conn task]
+(defn test-run-connection! [opts conn tasks]
   (connect conn)
-  (let [module (get-task task)
-        pass (if (get-in cli-opts [:options :ask-sudo-pass])
-               (get-sudo-password))
-        conn (if pass (sudo-runner conn "root" pass) conn)]
-    (let [result (exec module conn)]
-      (println result)))
+  (doseq [task tasks]
+    (-> (get-task task)
+        (exec conn)
+        :data debug-process))
   (disconnect conn))
