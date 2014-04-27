@@ -2,7 +2,8 @@
   (:require [me.raynes.fs :as fs]
             [me.raynes.conch.low-level :refer [stream-to-string]]
             [cemerick.pomegranate :as pom]
-            [matross.connections.core :refer [connect disconnect run]]
+            [matross.connections.core :refer [get-connection connect disconnect run]]
+            [matross.connections.sudo :refer [get-sudo-connection]]
             [matross.tasks.core :refer [get-task exec]]))
 
 ;; junk namespace... needs re-org
@@ -25,6 +26,39 @@
       (-> console (.readPassword padded-prompt nil) String/valueOf)
       (throw (new Exception "Could not find system console.")))))
 
+;;;; previously in model.core
+;;;; runner logic?
+(defn get-passwords [opts]
+  ;; this needs to happen before we make our connections
+  ;; since it can be used to configure our connections
+  (let [sudo (get-in opts [:options :ask-sudo-pass])
+        pass  (get-in opts [:options :ask-password])]
+    {:password (if pass (get-sensitive-user-input "password:"))
+     :sudo-pass (if sudo (get-sensitive-user-input "sudo password:"))}))
+
+(defn get-connection-config [opts spec]
+  ;; build a config to be used to create a connection
+  ;; merge information from user defaults, env vars, etc
+  (let [sudo-user (:sudo-user opts)]
+    (merge {:sudo-user (or sudo-user "root")
+            :sudo (or sudo-user (:sudo-pass opts))}
+           (select-keys opts [:password :sudo-pass])
+           spec)))
+
+(defn get-sudo?-connection [spec]
+  ;; get a connection, optionally wrapping it with sudo configuration
+  (let [conn (get-connection spec)]
+    (if-not (:sudo spec) conn
+      (get-sudo-connection conn spec))))
+
+(defn prepare [opts conf]
+  ;; preprocess user provided configuration using
+  ;; opts built up from  the cli
+  (let [opts (merge (get-passwords opts) opts)
+        get-conn-config (partial get-connection-config opts)
+        get-connection (comp get-sudo?-connection get-conn-config)]
+    (update-in conf [:connections] (partial map get-connection))))
+
 (defn debug-process [{:keys [exit] :as proc}]
   (prn {:exit @exit
         :out (stream-to-string proc :out)
@@ -37,3 +71,12 @@
         (exec conn)
         :data debug-process))
   (disconnect conn))
+
+(defn run! [opts config]
+  (let [{:keys [connections tasks]} (prepare opts config)]
+    (load-plugins!)
+    (doseq [conn connections]
+      (println "Running against:" conn)
+      (test-run-connection! opts conn tasks)
+      (println))
+    (shutdown-agents)))
