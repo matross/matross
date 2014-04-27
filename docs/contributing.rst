@@ -26,5 +26,5 @@ Matross is designed to be extended.
 .. toctree::
    :maxdepth: 1
 
-   connection_plugins
-   task_plugins
+   connection_plugins/writing_connection_plugins
+   task_plugins/writing_task_plugins

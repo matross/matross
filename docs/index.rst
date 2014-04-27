@@ -9,6 +9,7 @@ remote process gun
    :maxdepth: 1
 
    getting_started
-   design_goals
+   design
    contributing
    task_plugins
+   connection_plugins

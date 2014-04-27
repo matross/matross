@@ -1,4 +1,4 @@
-Design Goals
+SSH
 ============
 
 These are a thing we maybe have
