@@ -21,4 +21,4 @@ echo $version > $matross/docs/VERSION
 cp $here/../README.md $matross/docs/README
 
 tar -czf $target/matross-$version.tar.gz -C $target matross-$version
-echo Created: target/matross/$version.tar.gz
+echo Created: target/matross-$version.tar.gz
