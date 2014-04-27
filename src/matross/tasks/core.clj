@@ -7,6 +7,3 @@
 (defprotocol ITask
   "How to run tasks"
   (exec [self conn]))
-
-(defn task-result [succeeded? changed? data]
-  (TaskResult. succeeded? changed? data))

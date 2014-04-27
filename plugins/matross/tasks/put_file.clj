@@ -1,16 +1,9 @@
 (ns matross.tasks.put-file
-  (:require [matross.tasks.core :refer [task-result get-task ITask]]
-            [matross.connections.core :refer [run]])
-  (:import [java.io FileInputStream]))
+  (:require [matross.tasks.util :refer [exit-ok? deftask task-result]]
+            [matross.connections.core :refer [run]]))
 
-(deftype PutFile [spec]
-  ITask
-  (exec [self conn]
-    (let [{:keys [src dest]} spec]
-        (let [cat (str "cat > " dest "")
-              opts {:cmd ["/bin/sh" "-c" cat] :in src}
-              proc (run conn opts)]
-          (task-result (= 0 @(:exit proc)) true proc)))))
-
-(defmethod get-task :put-file [spec]
-   (new PutFile spec))
+(deftask :put-file [conn {:keys [src dest]}]
+  (let [cat (str "cat > " dest "")
+        opts {:cmd ["/bin/sh" "-c" cat] :in src}
+        proc (run conn opts)]
+    (task-result (exit-ok? proc) true proc)))
