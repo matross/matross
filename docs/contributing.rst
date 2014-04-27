@@ -4,6 +4,9 @@ Contributing
 Matross is free software, **everyone** is encouraged to help make it
 better.
 
+Matross should be simple and pleasant to use, anything else is
+unexpected behavior and should be reported and fixed.
+
 Here are a few specific ways that *you* could help:
 
 - use early or unreleased versions
@@ -16,12 +19,6 @@ Here are a few specific ways that *you* could help:
 
 .. _issues: https://github.com/matross/matross/issues
 .. _patches: https://github.com/matross/matross/pulls
-
-If a user is confused matross has a bug.
-
-=================
-Extending Matross
-=================
 
 Matross is designed to be extended.
 

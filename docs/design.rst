@@ -1,13 +1,17 @@
 Design
 ======
 
-Quick and dirty high level architecture & design goals, please patch this!!
+Quick and dirty high level architecture & design goals, *please patch*
+this!!
 
-Simple means single responsiblity, without interleaving or overlapping parts.
+Make something that is actually useful. Don't compromise simplicity
+for convenience. Make automation natural and complex things possible.
+Simple means single responsiblity, without interleaving or overlapping
+parts.
 
-- simple to use
+- simple automation
 
-  - template system
+  - reference based template system
   - immutable, always available data
   - scalable configuration (1 machine or 1k machines)
 
@@ -28,4 +32,5 @@ Simple means single responsiblity, without interleaving or overlapping parts.
   - able to work on any type of connection
   - agented or agentless
 
-Keep in mind this is not a feature list but instead a general heading.
+Keep in mind this is not a feature list but instead a general
+direction. Change as you see fit.
