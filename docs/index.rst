@@ -11,4 +11,4 @@ remote process gun
    getting_started
    design_goals
    contributing
-   task_modules
+   task_plugins

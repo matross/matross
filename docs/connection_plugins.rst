@@ -1,4 +1,4 @@
-Connection Modules
+Connection Plugins
 ==================
 
 Connections are core to the design and operation of matross. Using a
@@ -91,4 +91,4 @@ External Resources
 
 .. _Connection Interface: https://github.com/matross/matross/blob/master/src/matross/connections/core.clj
 
-__ https://github.com/matross/matross/blob/master/resources/plugins/connections/local.clj
+__ https://github.com/matross/matross/blob/master/plugins/matross/connections/local.clj

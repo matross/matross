@@ -1,4 +1,4 @@
-Task Modules
+Task Plugins
 ============
 
 It'd be nice if this were documented, wouldn't it?
@@ -6,9 +6,9 @@ It'd be nice if this were documented, wouldn't it?
 .. toctree::
    :maxdepth: 1
 
-   task_modules/command
-   task_modules/get_file
-   task_modules/put_file
+   task_plugins/command
+   task_plugins/get_file
+   task_plugins/put_file
 
 
 ==================
@@ -20,4 +20,4 @@ External Resources
 
 .. _Task Interface: https://github.com/matross/matross/blob/master/src/matross/tasks/core.clj
 
-__ https://github.com/matross/matross/blob/master/resources/plugins/tasks/command.clj
+__ https://github.com/matross/matross/blob/master/plugins/matross/tasks/command.clj
