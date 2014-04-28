@@ -4,6 +4,8 @@
   :license {:name "MIT"
             :url "https://github.com/matross/matross/blob/master/LICENSE"}
   :main matross.core
+  :source-paths ["src" "plugins"]
+  :test-paths ["test" "plugins"]
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.cli "0.3.1"]
                  [com.cemerick/pomegranate "0.3.0"]
