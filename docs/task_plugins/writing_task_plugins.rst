@@ -24,7 +24,7 @@ task may take any configuration and return any result-map.
 Using your task
 ~~~~~~~~~~~~~~~
 
-.. code-block: clojure
+.. code-block:: clojure
 
    {:type :my-task
     :my-arg "hello, world"}
