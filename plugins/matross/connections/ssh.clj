@@ -16,7 +16,7 @@
   (->> s
       (clojure.string/split-lines)
       (map clojure.string/trim)
-      (map clojure.string/trim-newlines)
+      (map clojure.string/trim-newline)
       (remove clojure.string/blank?)
       (map #(clojure.string/split %1 #" "))
       (map (fn [parts] [(first parts) (clojure.string/join " " (rest parts))]))
