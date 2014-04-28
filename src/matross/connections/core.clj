@@ -15,3 +15,9 @@
 
 (defmulti get-connection
   "get a connection instance of a specific type" :type)
+
+(defn exit-code [{e :exit}]
+  (deref e))
+
+(defn exit-ok? [proc]
+  (zero? (exit-code proc)))

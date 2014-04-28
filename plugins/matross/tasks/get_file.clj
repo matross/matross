@@ -1,7 +1,7 @@
 (ns matross.tasks.get-file
   (:require [me.raynes.conch.low-level :as sh]
-            [matross.tasks.util :refer [exit-ok? deftask task-result]]
-            [matross.connections.core :refer [run]]))
+            [matross.tasks.core :refer [deftask task-result]]
+            [matross.connections.core :refer [run exit-ok?]]))
 
 (deftask :get-file [conn {:keys [src dest]}]
   (let [cat (str "cat " src)

@@ -1,6 +1,6 @@
 (ns matross.tasks.command
-  (:require [matross.tasks.util :refer [exit-ok? deftask task-result]]
-            [matross.connections.core :refer [run]]))
+  (:require [matross.tasks.core :refer [deftask task-result]]
+            [matross.connections.core :refer [run exit-ok?]]))
 
 (defn key=val [map-entry]
   (let [[key val] map-entry
