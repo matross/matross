@@ -11,9 +11,15 @@
 (defn get-identity [conn]
   ;; supported keys
   ;; https://github.com/hugoduncan/clj-ssh/blob/0.5.9/src/clj_ssh/ssh.clj#L236
-  (let [defaults {:private-key-path "~/.ssh/id_rsa"
-                  :public-key-path "~/.ssh/id_rsa.pub"}]
-    (merge defaults conn)))
+  (let [defaults {:private-key-path "~/.ssh/id_rsa"}]
+    (-> conn
+        (select-keys [:private-key
+                      :public-key
+                      :private-key-path
+                      :public-key-path
+                      :passphrase
+                      :identity])
+        ((partial merge defaults)))))
 
 (defn create-session [conn]
   "Use the connection definition to create a jsch session"
