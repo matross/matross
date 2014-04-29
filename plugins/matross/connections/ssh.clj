@@ -2,25 +2,6 @@
   (:require [clj-ssh.ssh :as ssh]
             [matross.connections.core :refer [IConnect IRun get-connection]]))
 
-(defn ssh-config-connection [s]
-  "Convert a single host ssh config file, like the ones generated
-   by `vagrant ssh-config` into a map usable by the ssh connection
-   plugin"
-  ;; this needs work, some things aren't supported the way clj-ssh works
-  ;;
-  ;; required transformations that i'm aware of:
-  ;;
-  ;; User -> :username
-  ;; Port<str> -> :port<int>
-  ;; IdentifyFile -> :private-key-path
-  (->> s
-      (clojure.string/split-lines)
-      (map clojure.string/trim)
-      (map clojure.string/trim-newline)
-      (remove clojure.string/blank?)
-      (map #(clojure.string/split %1 #" "))
-      (map (fn [parts] [(first parts) (clojure.string/join " " (rest parts))]))
-      (into {:type :ssh})))
 
 (defn get-ssh-config [conn]
   ;; supported all configuration supported by `ssh -o`
@@ -80,6 +61,9 @@
                  (ssh/disconnect-channel channel)
                  exit))})))
 
-(defmethod get-connection :ssh [spec]
-  (let [session (create-session spec)]
+(defn ssh-connection [spec]
+ (let [session (create-session spec)]
     (new SSH spec session)))
+
+(defmethod get-connection :ssh [spec]
+  (ssh-connection spec))
