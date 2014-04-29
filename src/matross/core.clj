@@ -1,16 +1,16 @@
 (ns matross.core
   (:require [clojure.tools.cli :refer [parse-opts]]
-            [matross.util :refer [run!]])
+            [matross.executor :refer [run!]])
   (:gen-class))
 
 (def config {:connections [{:type :ssh :hostname "localhost"}
                            {:type :local}
                            {:type :ssh :hostname "127.0.0.1"}]
              :tasks [{:type :command
-                      :command "/bin/echo -n $test"
+                      :command "/bin/echo -n `whoami`: $test"
                       :env {:test "it works!"}}
                      {:type :command
-                      :command "seq 10 | tail -n 5 | xargs echo"}]})
+                      :command "seq 10 | tail -n 5 | xargs echo -n"}]})
 
 (def cli-opts
   [["-h" "--help"]

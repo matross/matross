@@ -1,10 +1,8 @@
 (ns matross.util
   (:require [me.raynes.fs :as fs]
-            [me.raynes.conch.low-level :refer [stream-to-string]]
             [cemerick.pomegranate :as pom]
-            [matross.connections.core :refer [get-connection connect disconnect run]]
-            [matross.connections.sudo :refer [get-sudo-connection]]
-            [matross.tasks.core :refer [get-task exec]]))
+            [matross.connections.core :refer [get-connection]]
+            [matross.connections.sudo :refer [get-sudo-connection]]))
 
 ;; junk namespace... needs re-org
 (defn load-plugins [& dirnames]
@@ -58,25 +56,3 @@
         get-conn-config (partial get-connection-config opts)
         get-connection (comp get-sudo?-connection get-conn-config)]
     (update-in conf [:connections] (partial map get-connection))))
-
-(defn debug-process [{:keys [exit] :as proc}]
-  (prn {:exit @exit
-        :out (stream-to-string proc :out)
-        :err (stream-to-string proc :err)}))
-
-(defn test-run-connection! [opts conn tasks]
-  (connect conn)
-  (doseq [task tasks]
-    (-> (get-task task)
-        (exec conn)
-        :data debug-process))
-  (disconnect conn))
-
-(defn run! [opts config]
-  (let [{:keys [connections tasks]} (prepare opts config)]
-    (load-plugins!)
-    (doseq [conn connections]
-      (println "Running against:" conn)
-      (test-run-connection! opts conn tasks)
-      (println))
-    (shutdown-agents)))
