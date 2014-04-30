@@ -13,4 +13,5 @@ The core set of connection plugins include:
 
    connection_plugins/local
    connection_plugins/ssh
+   connection_plugins/vagrant
 

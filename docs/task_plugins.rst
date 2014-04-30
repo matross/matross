@@ -12,5 +12,6 @@ The core set of task plugins include:
    :maxdepth: 1
 
    task_plugins/command
-   task_plugins/get_file
-   task_plugins/put_file
+   task_plugins/template
+   task_plugins/stream_to_file
+   task_plugins/stream_from_file
