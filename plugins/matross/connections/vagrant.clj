@@ -43,7 +43,7 @@
 
 (defn vagrant-ssh-connection [spec]
   (with-programs [vagrant]
-    (let [ssh-config (vagrant "ssh-config" (:name spec))
+    (let [ssh-config (vagrant "ssh-config" (get spec :name "default"))
           ssh-spec (translate-ssh-config ssh-config)]
       (ssh-connection (merge ssh-spec spec)))))
 

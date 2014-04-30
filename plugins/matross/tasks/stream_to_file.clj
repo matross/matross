@@ -1,4 +1,4 @@
-(ns matross.tasks.put-file
+(ns matross.tasks.stream-to-file
   (:require [matross.tasks.core :refer [deftask task-result]]
             [matross.connections.core :refer [run exit-ok?]]))
 

@@ -1,4 +1,4 @@
-(ns matross.tasks.cat-to-local
+(ns matross.tasks.stream-from-file
   (:require [me.raynes.conch.low-level :as sh]
             [matross.tasks.core :refer [deftask task-result]]
             [matross.connections.core :refer [run exit-ok?]]))
