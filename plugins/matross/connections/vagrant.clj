@@ -1,7 +1,8 @@
 (ns matross.connections.vagrant
   (:require [me.raynes.conch :refer [with-programs]]
             [matross.connections.core :refer [IConnect IRun get-connection] :as core]
-            [matross.connections.ssh :refer [ssh-connection]]))
+            [matross.connections.ssh :refer [ssh-connection]]
+            [clojure.set]))
 
 (deftype Vagrant [ssh-future]
 
