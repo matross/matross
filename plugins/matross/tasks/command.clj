@@ -2,6 +2,11 @@
   (:require [matross.tasks.core :refer [deftask task-result]]
             [matross.connections.core :refer [run exit-ok?]]))
 
+(comment
+:command shell command to run
+:shell system shell to use (optional)
+:env map of environment (optional))
+
 (defn key=val [map-entry]
   (let [[key val] map-entry
         keyname (name key)]

@@ -4,23 +4,17 @@
             [matross.tasks.put-file :as put]
             [clostache.parser :as template]))
 
-(comment "
+(comment
 :dest where to put the templated content
+:vars for template substitution
 :file a file to render
-:content a string to render
-")
+:content a string to render (optional, instead of :file))
 
-(defn get-content [conf]
-  (if (:file conf)
-    (slurp (:file conf))
-    (:content conf)))
-
-
-(deftask :template [conn {:keys [dest] :as conf}]
-  (let [content (get-content conf)
-        rendered (template/render content (:vars conf))]
+(deftask :template [conn {:keys [file content dest vars]}]
+  (let [content (if file (slurp file) content)
+        rendered (template/render content vars)]
     (run-task
      conn
-     {:type :put-file
+     {:type :stream-to-file
       :dest dest
       :src rendered})))
