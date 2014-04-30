@@ -6,7 +6,11 @@
 (def config {:connections [{:type :ssh :hostname "localhost"}
                            {:type :local}
                            {:type :ssh :hostname "127.0.0.1"}]
-             :tasks [{:type :command
+             :tasks [{:type :template
+                      :content "I'm sorry, {{name}}. I can't let you do that."
+                      :dest "/tmp/template"
+                      :vars {:name "Darrell"}}
+                     {:type :command
                       :command "/bin/echo -n `whoami`: $test"
                       :env {:test "it works!"}}
                      {:type :command

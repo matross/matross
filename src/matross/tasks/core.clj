@@ -19,3 +19,6 @@
          (let [~conn conn#
                ~config spec#]
            ~@body)))))
+
+(defn run-task [conn conf]
+  (exec (get-task conf) conn))

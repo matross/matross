@@ -10,4 +10,5 @@
                  [com.cemerick/pomegranate "0.3.0"]
                  [me.raynes/conch "0.6.0"]
                  [me.raynes/fs "1.4.5"]
-                 [clj-ssh "0.5.7"]])
+                 [clj-ssh "0.5.7"]
+                 [de.ubercode.clostache/clostache "1.3.1"]])
