@@ -1,7 +1,7 @@
 Command
 ============
 
-These are a thing we maybe have
+Run a shell command on a remote machine.
 
 Example
 ~~~~~~~

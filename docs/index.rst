@@ -10,6 +10,6 @@ remote process gun
 
    getting_started
    design
-   contributing
    task_plugins
    connection_plugins
+   contributing
