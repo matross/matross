@@ -14,7 +14,8 @@
   (doseq [task tasks]
     (-> (get-task task)
         (exec conn)
-        :data debug-process))
+        :data
+        debug-process))
   (disconnect conn))
 
 (defn run! [opts config]
