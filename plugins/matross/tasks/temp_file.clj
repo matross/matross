@@ -24,3 +24,4 @@
            (with-temp-files ~conn ~(subvec bindings 1) ~@body)
            (finally (run-task ~conn {:type :command
                                      :command (str "rm -f " ~(bindings 0))}))))))
+
