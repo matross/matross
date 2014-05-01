@@ -3,15 +3,15 @@
             [clostache.parser :as template]))
 
 
-(deftask :template [conn {:keys [dest vars file content]}]
+(deftask :template [conn {:keys [dest vars file inline]}]
 
   (comment
     :dest where to put the templated content
     :vars for template substitution
     :file a file to render
-    :content a string to render (optional, instead of :file))
+    :inline a string to render (optional, instead of :file))
 
-  (let [content (if file (slurp file) content)
+  (let [content (if file (slurp file) inline)
         rendered (template/render content vars)]
     (run-task
      conn
