@@ -11,10 +11,9 @@
                  (assoc (:data temp-result) :path temp-file))))
 
 (defmacro with-temp-files
-  "Evaluate the body with the names bound to temp files on the given connection,                                                                                                              cleaning them up after execution."
+  "Evaluate the body with the names bound to temp files on the given connection,
+cleaning them up after execution."
   [conn bindings & body]
   `(let [~@(interleave bindings
-                       (map (fn [b#] '(get-in (run-task conn {:type :temp-file}) [:data :path])) bindings))
-         r# '(do ~@body)]
-     '(map (fn [b] (run-task conn {:type :command :command (str "rm -f" b)})) ~bindings)
-     r#))
+                       (map (fn [b#] '(get-in (run-task conn {:type :temp-file}) [:data :path])) bindings))]
+     ~@body))
