@@ -32,4 +32,4 @@
           src (get-script conf)
           final (run-task conn (template-conf conf src script))]
       (run-task conn {:type :command :command (str "chmod +x " script)})
-      (run-task conn {:type :command :command script}))))
+      (run-task conn {:type :command :command script :env (get conf :env {})}))))
