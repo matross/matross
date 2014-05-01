@@ -13,15 +13,14 @@
   ;; hic sunt dracones
   "Evaluate the body with the names bound to temp files on the connection"
   [conn bindings & body]
-  (cond
-    (= (count bindings) 0)
-      `(do ~@body)
-    (= (bindings 0) conn)
-      `(throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
-    (symbol? (bindings 0))
-      `(let [~(bindings 0) (get-in (run-task ~conn {:type :temp-file}) [:data :path])]
-         (try
-           (with-temp-files ~conn ~(subvec bindings 1) ~@body)
-           (finally (run-task ~conn {:type :command
-                                     :command (str "rm -f " ~(bindings 0))}))))))
+  (cond (some #(= conn %1) bindings)
+        `(throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
+
+        :else
+        `(let [~@(interleave bindings
+                             (map (fn [b] '(get-in (run-task conn {:type :temp-file}) [:data :path])) bindings))]
+           (try
+             ~@body
+             (finally
+               ~@(map (fn [b] `(run-task ~conn {:type :command :command (str "/bin/rm -f " ~b)})) bindings))))))
 
