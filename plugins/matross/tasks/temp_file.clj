@@ -22,5 +22,4 @@
            (try
              ~@body
              (finally
-               ~@(map (fn [b] `(run-task ~conn {:type :command :command (str "/bin/rm -f " ~b)})) bindings))))))
-
+               (run-task ~conn {:type :command :command (str "/bin/rm -f " (clojure.string/join " " ~bindings))}))))))
