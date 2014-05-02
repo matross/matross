@@ -11,13 +11,13 @@
          {:seq true})))
 
 (def vagrant-test-connection
-  (ssh-connection (translate-ssh-config (slurp (System/getenv "VAGRANT_SSH_CONF")))))
+  (translate-ssh-config (slurp (System/getenv "TEST_SSH_CONF"))))
 
 (defmacro task-tests
   "Evaluate the body against the test vm connection, exposed as conn"
   [conn & body]
 
-  `(let [~conn vagrant-test-connection]
+  `(let [~conn (ssh-connection vagrant-test-connection)]
      (connect ~conn)
      ~@body
      (disconnect ~conn)))
