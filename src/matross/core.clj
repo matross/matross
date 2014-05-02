@@ -19,7 +19,8 @@
 (def cli-opts
   [["-h" "--help"]
    ["-s" "--ask-password"]
-   ["-S" "--ask-sudo-pass"]])
+   ["-S" "--ask-sudo-pass"]
+   ["-d" "--debug"]])
 
 (defn display-help []
   (prn "matross!"))
