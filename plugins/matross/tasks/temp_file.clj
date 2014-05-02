@@ -18,7 +18,7 @@
 
         :else
         `(let [~@(interleave bindings
-                             (map (fn [b] '(get-in (run-task conn {:type :temp-file}) [:data :path])) bindings))]
+                             (map (fn [b] `(get-in (run-task ~conn {:type :temp-file}) [:data :path])) bindings))]
            (try
              ~@body
              (finally
