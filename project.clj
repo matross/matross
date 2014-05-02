@@ -11,4 +11,7 @@
                  [me.raynes/conch "0.6.0"]
                  [me.raynes/fs "1.4.5"]
                  [clj-ssh "0.5.7"]
-                 [de.ubercode.clostache/clostache "1.3.1"]])
+                 [de.ubercode.clostache/clostache "1.3.1"]]
+  :test-selectors {:default (complement :integration)
+                   :integration :integration
+                   :all (constantly true)})
