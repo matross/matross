@@ -1,6 +1,7 @@
 (ns matross.connections.ssh
   (:require [clj-ssh.ssh :as ssh]
-            [matross.connections.core :refer [IConnect IRun get-connection]]))
+            [matross.connections.core :refer [IConnect IRun get-connection]]
+            [clojure.set]))
 
 
 (defn get-ssh-config [conn]
@@ -67,3 +68,29 @@
 
 (defmethod get-connection :ssh [spec]
   (ssh-connection spec))
+
+(def translations {"HostName" :hostname
+                   "User" :username
+                   "IdentityFile" :private-key-path
+                   "Port" :port
+                   "StrictHostKeyChecking" :strict-host-key-checking})
+
+(defn- convert-keys [m]
+  (if-let [port (:port m)]
+    (assoc m :port (Integer. port))
+    m))
+
+(defn translate-ssh-config [s]
+  "Convert a single host ssh config file, like the ones generated
+   by `vagrant ssh-config` into a map usable by the ssh connection
+   plugin"
+  (->> s
+      (clojure.string/split-lines)
+      (map clojure.string/trim-newline)
+      (map clojure.string/trim)
+      (remove clojure.string/blank?)
+      (map #(clojure.string/split %1 #" "))
+      (map (fn [parts] [(first parts) (clojure.string/join " " (rest parts))]))
+      (into {:type :ssh})
+      (#(clojure.set/rename-keys %1 translations))
+      (convert-keys)))
