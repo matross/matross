@@ -14,7 +14,7 @@
                :vars {:example "matross"}
                :dest "~/wow"}]})
 
-(deftask :template [conn {:keys [dest vars file inline]}]
+(deftask template [conn {:keys [dest vars file inline]}]
   (let [content (if file (slurp file) inline)
         rendered (template/render content vars)]
     (run-task conn

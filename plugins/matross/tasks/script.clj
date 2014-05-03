@@ -20,7 +20,7 @@
       (assoc :dest (clojure.string/trim-newline dest))
       (update-in [:vars] #(if (:template conf) %1 {}))))
 
-(deftask :script [conn conf]
+(deftask script [conn conf]
   (comment
     :file a file to render
     :inline a string to render (optional, instead of :file)

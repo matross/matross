@@ -12,7 +12,7 @@
    :examples [{:command "echo $message"
                :env {:message "hello, world!"}}]})
 
-(deftask :command [conn {:keys [shell command env]
+(deftask command [conn {:keys [shell command env]
                          :or   {shell "/bin/sh"}}]
   (let [key=val (fn [[key val]] (-> (name key) (str "=" val)))
         cmd (concat ["/usr/bin/env" "-i"] (map key=val env) [shell "-c" command])

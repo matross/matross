@@ -7,7 +7,7 @@
 :src remote file to read
 :dest input stream to write remote file contents into)
 
-(deftask :stream-from-file [conn {:keys [src dest]}]
+(deftask stream-from-file [conn {:keys [src dest]}]
   (let [cat (str "cat " src)
         proc (run conn {:cmd ["/bin/sh" "-c" cat]})]
     (sh/stream-to proc :out dest)

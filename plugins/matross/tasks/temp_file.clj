@@ -4,7 +4,7 @@
             [me.raynes.conch.low-level :refer [stream-to-string]]))
 
 
-(deftask :temp-file [conn conf]
+(deftask temp-file [conn conf]
   (let [temp-dir "/tmp"
         mktemp (str "mktemp " temp-dir "/matross.XXXXXX")
         {:keys [data succeeded?]} (run-task conn {:type :command :command mktemp})
