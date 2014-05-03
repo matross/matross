@@ -16,10 +16,16 @@
     :task "resources/templates/task_doc.rst.mustache"
     :connection "resources/templates/connection_doc.rst.mustache"))
 
+(defn name-to-filename [n]
+  (str (clojure.string/replace n "-" "_") ".clj"))
+
+(defn name-to-url [n]
+  (str "https://github.com/matross/matross/blob/master/plugins/matross/tasks/" (name-to-filename n)))
+
 (defn prepare-task-documentation [{:keys [name description examples options url defaults] :as doc}]
   {:name name
    :description description
-   :url url
+   :url (fn [_] (name-to-url name))
    :examples (map (fn [ex] {:example (str ex)}) examples)
    :options (map (fn [[k v]]
                    (let [default (if (k defaults) (str " - default: ``" (k defaults) "``"))]
