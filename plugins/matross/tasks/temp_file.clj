@@ -5,7 +5,9 @@
 
 
 (deftask :temp-file [conn conf]
-  (let [{:keys [data succeeded?]} (run-task conn {:type :command :command "mktemp"})
+  (let [temp-dir "/tmp"
+        mktemp (str "mktemp " temp-dir "/matross.XXXXXX")
+        {:keys [data succeeded?]} (run-task conn {:type :command :command mktemp})
         temp-file (trim-newline (stream-to-string data :out))]
     (task-result succeeded? true (assoc data :path temp-file))))
 
