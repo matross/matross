@@ -4,18 +4,29 @@ set -e
 
 BOX_NAME=$1
 
-here=$(dirname $0)
-resources=$here/../../.test/ssh-configs
+HERE=$(dirname $0)
+RESOURCES=$HERE/../../.test/ssh-configs
 
-mkdir -p $resources
+mkdir -p $RESOURCES
 
-vagrant up $BOX_NAME
+if [ $BOX_NAME = "local" ]; then
 
-vagrant status \
-    | grep '(' \
-    | grep 'running' \
-    | awk '{ print $1 }' \
-    | xargs -I {} \
-    /bin/sh -c "vagrant ssh-config {} > $resources/{}"
+  cat > $RESOURCES/local <<EOF
+Host local
+  HostName 127.0.0.1
+EOF
 
-echo generated ssh configs: $(ls $resources)
+else
+
+  vagrant up $BOX_NAME
+
+  vagrant status \
+      | grep '(' \
+      | grep 'running' \
+      | awk '{ print $1 }' \
+      | xargs -I {} \
+      /bin/sh -c "vagrant ssh-config {} > $RESOURCES/{}"
+
+fi
+
+echo generated ssh config: $BOX_NAME
