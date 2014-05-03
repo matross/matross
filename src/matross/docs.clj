@@ -3,12 +3,19 @@
             [matross.tasks.core :refer [run-task]]
             [matross.connections.core :refer [get-connection]]))
 
+(defn name-to-filename 
+  ([n] (name-to-filename n "clj"))
+  ([n ext] (str (clojure.string/replace n "-" "_") "." ext)))
+
+(defn name-to-url [n]
+  (str "https://github.com/matross/matross/blob/master/plugins/matross/tasks/" (name-to-filename n)))
+
 (defn doc-path [{:keys [type name]}]
   "Find the documentation path from the doc data"
   (let [doc-root (case type
                    :task "docs/task_plugins"
                    :connection "docs/connection_plugins")]
-    (str doc-root "/" name ".rst")))
+    (str doc-root "/" (name-to-filename name "rst"))))
 
 (defn template-path [{:keys [type]}]
   "Find the template for the documentation type"
@@ -16,15 +23,10 @@
     :task "resources/templates/task_doc.rst.mustache"
     :connection "resources/templates/connection_doc.rst.mustache"))
 
-(defn name-to-filename [n]
-  (str (clojure.string/replace n "-" "_") ".clj"))
-
-(defn name-to-url [n]
-  (str "https://github.com/matross/matross/blob/master/plugins/matross/tasks/" (name-to-filename n)))
-
 (defn prepare-task-documentation [{:keys [name description examples options url defaults] :as doc}]
   {:name name
    :description description
+   :example "{{ example }}"
    :url (fn [_] (name-to-url name))
    :examples (map (fn [ex] {:example (str ex)}) examples)
    :options (map (fn [[k v]]

@@ -8,7 +8,7 @@ Example
 
 .. code-block:: clojure
 
-   {:type :template, :dest "~/wow", :inline "template is cool!", :vars {:name "matross"}}
+   {:type :template, :dest "~/wow", :inline "{{ example }} is cool!", :vars {:example "matross"}}
 
 Configuration
 ~~~~~~~~~~~~~

@@ -10,8 +10,8 @@
              :file "a local template file to render"
              :inline "string to render (optional, instead of file)"}
    :examples [{:type :template
-               :inline "{{ name }} is cool!"
-               :vars {:name "matross"}
+               :inline "{{ example }} is cool!"
+               :vars {:example "matross"}
                :dest "~/wow"}]})
 
 (deftask :template [conn {:keys [dest vars file inline]}]
