@@ -12,7 +12,7 @@
   (TaskResult. succeeded? changed? data))
 
 (defmacro deftask [type [conn config] & body]
-  `(defmethod matross.tasks.core/get-task ~type [spec#]
+  `(defmethod matross.tasks.core/get-task (keyword '~type) [spec#]
      (reify
        matross.tasks.core/ITask
        (exec [_# conn#]
