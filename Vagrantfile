@@ -15,7 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   def create_box(config, name, url)
     config.vm.define name do |box|
-      config.vm.synced_folder "./", "/vagrant", disabled: true
+      box.vm.synced_folder "./", "/vagrant", disabled: true
       box.vm.box = name
       box.vm.box_url = url
     end
