@@ -9,7 +9,8 @@ RESOURCES=$HERE/../../.test/ssh-configs
 
 mkdir -p $RESOURCES
 
-if [ $BOX_NAME = "local" ]; then
+if [ "${BOX_NAME}" = "local" ]
+then
 
   cat > $RESOURCES/local <<EOF
 Host local
