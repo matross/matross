@@ -1,6 +1,6 @@
 (ns matross.tasks.core)
 
-(defmulti get-task :type)
+(defmulti get-task #(keyword (:type %1)))
 
 (defrecord TaskResult [succeeded? changed? data])
 
