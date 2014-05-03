@@ -3,30 +3,31 @@
             [matross.executor :refer [run!]])
   (:gen-class))
 
-(def config {:connections [{:type :ssh :hostname "localhost"}
-                           {:type :local}
-                           {:type :ssh :hostname "127.0.0.1"}]
-             :tasks [{:type :template
-                      :content "I'm sorry, {{name}}. I can't let you do that."
-                      :dest "/tmp/template"
-                      :vars {:name "Darrell"}}
-                     {:type :command
-                      :command "/bin/echo -n `whoami`: $test"
-                      :env {:test "it works!"}}
-                     {:type :command
-                      :command "seq 10 | tail -n 5 | xargs echo -n"}]})
-
 (def cli-opts
   [["-h" "--help"]
    ["-s" "--ask-password"]
    ["-S" "--ask-sudo-pass"]
    ["-d" "--debug"]])
 
-(defn display-help []
-  (prn "matross!"))
+(defn exit [msg]
+  (if msg (println msg))
+  (System/exit 1))
+
+(defn show-usage []
+  (println "usage: matross <config>"))
+
+(defn show-help [{:keys [summary]}]
+  (show-usage)
+  (println summary))
+
+(defn get-config [{:keys [options arguments] :as opts}]
+  (if (:help options)
+    (exit (show-help opts))
+    (if-let [config-path (first arguments)]
+      (load-file config-path)
+      (exit (show-usage)))))
 
 (defn -main [& args]
-  (let [opts (parse-opts args cli-opts)]
-    (if (get-in opts [:options :help])
-      (display-help)
-      (run! opts config))))
+  (let [opts (parse-opts args cli-opts)
+        config (get-config opts)]
+    (run! opts config)))
