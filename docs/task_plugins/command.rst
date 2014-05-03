@@ -1,5 +1,5 @@
-Command
-============
+command
+======================================================
 
 Run a shell command on a remote machine.
 
@@ -8,9 +8,7 @@ Example
 
 .. code-block:: clojure
 
-   {:command "echo $message"
-    :env {:message "hello, world!"}}
-
+   {:command "echo $message", :env {:message "hello, world!"}}
 
 Configuration
 ~~~~~~~~~~~~~
@@ -21,11 +19,11 @@ Configuration
 
 ``:env``
 
-  map containing shell environment (optional)
+  map containing shell environment (optional) - default: ``{}``
 
 ``:shell``
 
-  path to shell to use (optional, defaults to ``/bin/sh``)
+  path to shell to use (optional) - default: ``/bin/sh``
 
 Resources
 ~~~~~~~~~
