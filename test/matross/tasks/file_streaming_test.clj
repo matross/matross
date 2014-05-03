@@ -19,4 +19,5 @@
      (let [result-buffer (new StringWriter)
            get-result (run-task test-conn
                                 {:type :stream-from-file :src target :dest result-buffer})]
+       (is (:succeeded? get-result) "retrieved file")
        (is (= (.toString result-buffer) file-contents))))))
