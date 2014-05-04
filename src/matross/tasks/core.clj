@@ -20,6 +20,8 @@ The arguments are the same as `defn`. The only expectation is that the first arg
 
   (let [type (first fdecl)
         param_count (count (some #(if (vector? %1) %1) fdecl))]
+    (if (not (= param_count 2))
+      (throw (IllegalArgumentException. "Tasks must be a function of two arguments, an IRun for the target machine, and the current configuration.")))
     `(do
        (defn ~@fdecl)
 
