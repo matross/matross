@@ -18,15 +18,12 @@ Configuration
 ~~~~~~~~~~~~~
 
 ``:command``
-
   command to run
 
 ``:env``
-
   map containing shell environment (optional) - default: ``{}``
 
 ``:shell``
-
   path to shell to use (optional) - default: ``/bin/sh``
 
 Resources

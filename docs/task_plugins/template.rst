@@ -15,19 +15,15 @@ Configuration
 ~~~~~~~~~~~~~
 
 ``:file``
-
   a local template file to render
 
 ``:dest``
-
   where to put the templated content
 
 ``:inline``
-
   string to render (optional, instead of file)
 
 ``:vars``
-
   for template substitution
 
 Resources

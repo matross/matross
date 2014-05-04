@@ -15,11 +15,9 @@ Configuration
 ~~~~~~~~~~~~~
 
 ``:src``
-
   remote file path
 
 ``:dest``
-
   destination writer
 
 Resources

@@ -19,7 +19,6 @@ Configuration
 ~~~~~~~~~~~~~
 
 ``:temp-dir``
-
   Remote temporary directory (must already exist) - default: ``/tmp``
 
 Resources

@@ -14,11 +14,9 @@ Configuration
 ~~~~~~~~~~~~~
 
 ``:src``
-
   source input, string or stream
 
 ``:dest``
-
   remote filepath
 
 Resources

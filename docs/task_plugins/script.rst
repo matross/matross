@@ -17,23 +17,18 @@ Configuration
 ~~~~~~~~~~~~~
 
 ``:file``
-
   a file to render
 
 ``:template``
-
   whether or not to template the script - default: ``true``
 
 ``:env``
-
   environment variables to expose to the script - default: ``{}``
 
 ``:inline``
-
   a string to render (optional, instead of ``:file``)
 
 ``:vars``
-
   map of vars for templating (optional) - default: ``{}``
 
 Resources
