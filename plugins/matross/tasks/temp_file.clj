@@ -18,7 +18,7 @@
    body has been evaluated, delete the temp files from the target machine."
   [conn bindings & body]
   (cond (some #(= conn %1) bindings)
-        `(throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
+        (throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
 
         :else
         `(let [~@(interleave bindings
