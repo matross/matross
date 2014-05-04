@@ -3,9 +3,9 @@ command
 
 Execute a shell command on the target machine in a normalized environment.
 
-   For example, ``{:command "echo $VAR" :env {:VAR "herp"}}`` is equivalent
-   to running `/usr/bin/env -i VAR=herp /bin/sh -c 'echo $VAR'` on the target
-   machine.
+For example, ``{:command "echo $VAR" :env {:VAR "herp"}}`` is equivalent
+to running ``/usr/bin/env -i VAR=herp /bin/sh -c 'echo $VAR'`` on the target
+machine.
 
 Example
 ~~~~~~~

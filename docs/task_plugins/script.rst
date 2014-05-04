@@ -1,10 +1,10 @@
 script
 ======================================================
 
-Execute a script file or an inline script on the target machine, optionally running the
-   contents through the templating engine prior to transfer.
+Execute a script file or an inline script on the target machine,
+optionally running the contents through the templating engine prior to transfer.
 
-   See also `matross.tasks.command`
+See also ``matross.tasks.command``
 
 Example
 ~~~~~~~

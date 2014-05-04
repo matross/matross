@@ -2,7 +2,7 @@ template
 ======================================================
 
 Run the contents of the given file or inline template through a mustache template
-   engine and write the result to the desired file on the target machine
+engine and write the result to the desired file on the target machine
 
 Example
 ~~~~~~~

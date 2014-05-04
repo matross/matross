@@ -15,7 +15,10 @@
 (defmacro deftask
   "Define a function and register it's name as an implementation of the matross.tasks.core/get-task multimethod.
 
-The arguments are the same as `defn`. The only expectation is that the first argument will be bound to the IRun instance to opereate on and the second argument will be bound to the current configuration."
+   The arguments are the same as ``defn``.
+   The only expectation is that the first argument will be
+   bound to the IRun instance to opereate on and the second
+   argument will be bound to the current configuration."
 
   [& fdecl]
 

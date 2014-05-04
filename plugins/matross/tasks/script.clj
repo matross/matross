@@ -20,10 +20,10 @@
       (update-in [:vars] #(if (:template conf) %1 {}))))
 
 (deftask script
-  "Execute a script file or an inline script on the target machine, optionally running the
-   contents through the templating engine prior to transfer.
+  "Execute a script file or an inline script on the target machine,
+   optionally running the contents through the templating engine prior to transfer.
 
-   See also `matross.tasks.command`"
+   See also ``matross.tasks.command``"
   [conn conf]
   (comment
     :file a file to render

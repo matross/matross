@@ -1,11 +1,12 @@
 (ns matross.docs
   (:require [matross.util :refer [load-plugins!]]
             [matross.connections.core :refer [get-connection]]
+            [clojure.string :as string]
             [clostache.parser :as template]))
 
 (defn name-to-filename 
   ([n] (name-to-filename n "clj"))
-  ([n ext] (str (clojure.string/replace n "-" "_") "." ext)))
+  ([n ext] (str (string/replace n "-" "_") "." ext)))
 
 (defn name-to-url [n]
   (str "https://github.com/matross/matross/blob/master/plugins/matross/tasks/" (name-to-filename n)))
@@ -25,7 +26,7 @@
 
 (defn prepare-task-documentation [{:keys [name doc examples options url defaults] :as doc}]
   {:name name
-   :doc doc
+   :doc (string/replace doc #"\n\ {3}" "\n") ;; this should be "smarter"
    :example "{{ example }}"
    :url (fn [_] (name-to-url name))
    :examples (map (fn [ex] {:example (str ex)}) examples)
