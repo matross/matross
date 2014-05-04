@@ -1,4 +1,5 @@
-(ns matross.tasks.core)
+(ns matross.tasks.core
+  (:require [matross.docs :refer [defdocs]]))
 
 (defmulti get-task #(keyword (:type %1)))
 
@@ -24,6 +25,8 @@ The arguments are the same as `defn`. The only expectation is that the first arg
       (throw (IllegalArgumentException. "Tasks must be a function of two arguments, an IRun for the target machine, and the current configuration.")))
     `(do
        (defn ~@fdecl)
+
+       (defdocs :task (meta #'~type))
 
        (defmethod matross.tasks.core/get-task (keyword '~type) [spec#]
          (reify

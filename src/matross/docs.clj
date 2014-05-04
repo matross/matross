@@ -1,7 +1,7 @@
 (ns matross.docs
   (:require [matross.util :refer [load-plugins!]]
-            [matross.tasks.core :refer [run-task]]
-            [matross.connections.core :refer [get-connection]]))
+            [matross.connections.core :refer [get-connection]]
+            [clostache.parser :as template]))
 
 (defn name-to-filename 
   ([n] (name-to-filename n "clj"))
@@ -23,9 +23,9 @@
     :task "resources/templates/task_doc.rst.mustache"
     :connection "resources/templates/connection_doc.rst.mustache"))
 
-(defn prepare-task-documentation [{:keys [name description examples options url defaults] :as doc}]
+(defn prepare-task-documentation [{:keys [name doc examples options url defaults] :as doc}]
   {:name name
-   :description description
+   :doc doc
    :example "{{ example }}"
    :url (fn [_] (name-to-url name))
    :examples (map (fn [ex] {:example (str ex)}) examples)
@@ -40,18 +40,16 @@
     :connection doc))
 
 (def documentation (atom {}))
-(defn defdocs [key docs]
-  (let [name (name key)
-        type (or (:type docs) :task)
-        docs (assoc docs :name name :type type)]
-    (swap! documentation assoc key docs)))
+
+(defn defdocs [type md]
+  (let [docs (assoc md :type type)]
+    (swap! documentation assoc (keyword (:name md)) docs)))
 
 (defn template-doc! [conn doc-key]
   (let [doc (-> documentation deref doc-key)]
-    (run-task conn {:type :template 
-                    :dest (doc-path doc)
-                    :file (template-path doc)
-                    :vars (prepare-documentation doc)})
+    (spit
+     (doc-path doc)
+     (template/render (slurp (template-path doc)) (prepare-documentation doc)))
     (println "wrote:" (doc-path doc))))
 
 (defn -main []

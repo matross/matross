@@ -1,27 +1,16 @@
-Stream to File
-==============
+stream-to-file
+======================================================
 
-A low level task for streaming files to the remote machine.
+Write the contents of the given Reader-ish to the desired file on the target machine.
 
 Example
 ~~~~~~~
 
 .. code-block:: clojure
 
-   {:type :stream-to-file
-    :src my-input-stream
-    :dest "~/remote-file"}
 
 Configuration
 ~~~~~~~~~~~~~
-
-``:src``
-
-  input stream or string to write to the remote file
-
-``:dest``
-
-  remote filepath
 
 Resources
 ~~~~~~~~~

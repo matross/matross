@@ -1,7 +1,8 @@
 template
 ======================================================
 
-The template module lets you template files or contents and put them on the remote machine.
+Run the contents of the given file or inline template through a mustache template
+   engine and write the result to the desired file on the target machine
 
 Example
 ~~~~~~~

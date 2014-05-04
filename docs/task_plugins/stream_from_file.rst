@@ -1,27 +1,16 @@
-Stream from File
-================
+stream-from-file
+======================================================
 
-A low level task for streaming files from the remote machine.
+Stream the contents of a file on the target machine to the given Writer locally.
 
 Example
 ~~~~~~~
 
 .. code-block:: clojure
 
-   {:type :stream-to-file
-    :src "~/remote-file"
-    :dest my-input-stream}
 
 Configuration
 ~~~~~~~~~~~~~
-
-``:src``
-
-  remote filepath
-
-``:dest``
-
-  input stream to write the remote file contents into
 
 Resources
 ~~~~~~~~~

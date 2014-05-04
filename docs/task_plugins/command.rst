@@ -1,7 +1,11 @@
 command
 ======================================================
 
-Run a shell command on a remote machine.
+Execute a shell command on the target machine in a normalized environment.
+
+   For example, `{:command &quot;echo $VAR&quot; :env {:VAR &quot;herp&quot;}}` is equivalent
+   to running `/usr/bin/env -i VAR=herp /bin/sh -c 'echo $VAR'` on the target
+   machine.
 
 Example
 ~~~~~~~
