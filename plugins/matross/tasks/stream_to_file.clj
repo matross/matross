@@ -6,7 +6,9 @@
 :src input stream or string
 :dest remote filepath)
 
-(deftask stream-to-file [conn {:keys [src dest]}]
+(deftask stream-to-file
+  "Write the contents of the given Reader-ish to the desired file on the target machine."
+  [conn {:keys [src dest]}]
   (let [cat  (str "cat > " dest "")
         proc (run conn {:in src
                         :cmd ["/bin/sh" "-c" cat]})]

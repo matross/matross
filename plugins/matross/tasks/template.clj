@@ -14,7 +14,10 @@
                :vars {:example "matross"}
                :dest "~/wow"}]})
 
-(deftask template [conn {:keys [dest vars file inline]}]
+(deftask template
+  "Run the contents of the given file or inline template through a mustache template
+   engine and write the result to the desired file on the target machine"
+  [conn {:keys [dest vars file inline]}]
   (let [content (if file (slurp file) inline)
         rendered (template/render content vars)]
     (run-task conn

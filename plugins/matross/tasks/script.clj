@@ -3,7 +3,6 @@
             [matross.tasks.template :as template]
             [matross.tasks.temp-file :refer [with-temp-files]]))
 
-
 (def defaults {:template true
                :vars {}
                :env {}})
@@ -20,7 +19,12 @@
       (assoc :dest (clojure.string/trim-newline dest))
       (update-in [:vars] #(if (:template conf) %1 {}))))
 
-(deftask script [conn conf]
+(deftask script
+  "Execute a script file or an inline script on the target machine, optionally running the
+   contents through the templating engine prior to transfer.
+
+   See also `matross.tasks.command`"
+  [conn conf]
   (comment
     :file a file to render
     :inline a string to render (optional, instead of :file)

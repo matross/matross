@@ -12,7 +12,13 @@
    :examples [{:command "echo $message"
                :env {:message "hello, world!"}}]})
 
-(deftask command [conn {:keys [shell command env]
+(deftask command
+  "Execute a shell command on the target machine in a normalized environment.
+
+   For example, `{:command \"echo $VAR\" :env {:VAR \"herp\"}}` is equivalent
+   to running `/usr/bin/env -i VAR=herp /bin/sh -c 'echo $VAR'` on the target
+   machine."
+[conn {:keys [shell command env]
                          :or   {shell "/bin/sh"}}]
   (let [key=val (fn [[key val]] (-> (name key) (str "=" val)))
         cmd (concat ["/usr/bin/env" "-i"] (map key=val env) [shell "-c" command])
