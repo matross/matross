@@ -10,11 +10,11 @@
    machine."
 
   {:options {:command "command to run"
-              :env "map containing shell environment (optional)"
-              :shell "path to shell to use (optional)"}
-    :defaults {:shell "/bin/sh" :env {}}
-    :examples [{:command "echo $message"
-                :env {:message "hello, world!"}}]}
+             :env "map containing shell environment (optional)"
+             :shell "path to shell to use (optional)"}
+   :defaults {:shell "/bin/sh" :env {}}
+   :examples [{:command "echo $message"
+               :env {:message "hello, world!"}}]}
 
   [conn {:keys [shell command env]
          :or   {shell "/bin/sh"}}]

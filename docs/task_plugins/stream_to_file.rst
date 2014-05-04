@@ -1,16 +1,25 @@
 stream-to-file
 ======================================================
 
-Write the contents of the given Reader-ish to the desired file on the target machine.
+Write the contents of the given source input to the desired file on the target machine.
 
 Example
 ~~~~~~~
 
 .. code-block:: clojure
 
+   {:type :stream-to-file, :src "alias git=wow", :dest "~/.bash_aliases"}
 
 Configuration
 ~~~~~~~~~~~~~
+
+``:src``
+
+  source input, string or stream
+
+``:dest``
+
+  remote filepath
 
 Resources
 ~~~~~~~~~

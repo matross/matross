@@ -3,12 +3,16 @@
             [matross.tasks.core :refer [deftask task-result]]
             [matross.connections.core :refer [run exit-ok?]]))
 
-(comment
-:src remote file to read
-:dest input stream to write remote file contents into)
-
 (deftask stream-from-file
-  "Stream the contents of a file on the target machine to the given Writer locally."
+  "Low level task to stream the contents of a file on the target machine
+   to the given writer locally."
+
+  {:options {:src "remote file path"
+             :dest "destination writer"}
+   :examples [{:type :stream-from-file
+               :src "~/.bashrc"
+               :dest 'my-input-stream}]}
+
   [conn {:keys [src dest]}]
   (let [cat (str "cat " src)
         proc (run conn {:cmd ["/bin/sh" "-c" cat]})]
