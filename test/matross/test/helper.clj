@@ -2,6 +2,7 @@
   "Helper functions for writing and running tests"
   (:require [me.raynes.conch :refer [with-programs]]
             [matross.connections.ssh :refer [translate-ssh-config ssh-connection]]
+            [matross.connections.debug :refer [debug-connection]]
             [matross.connections.core :refer [connect disconnect]]))
 
 (defn get-available-vms []
@@ -13,11 +14,17 @@
 (def vagrant-test-connection
   (memoize (fn [] (translate-ssh-config (slurp (System/getenv "TEST_SSH_CONF"))))))
 
+(defn test-connection []
+  (let [conn (ssh-connection (vagrant-test-connection))]
+    (if-let [debug (System/getenv "TEST_DEBUG")]
+      (debug-connection conn)
+      conn)))
+
 (defmacro task-tests
   "Evaluate the body against the test vm connection, exposed as conn"
   [conn & body]
 
-  `(let [~conn (ssh-connection (vagrant-test-connection))]
+  `(let [~conn (test-connection)]
      (connect ~conn)
      ~@body
      (disconnect ~conn)))
