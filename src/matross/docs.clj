@@ -10,16 +10,16 @@
 (defn name-to-url [n]
   (str "https://github.com/matross/matross/blob/master/plugins/matross/tasks/" (name-to-filename n)))
 
-(defn doc-path [{:keys [type name]}]
+(defn doc-path [{:keys [doc-type name]}]
   "Find the documentation path from the doc data"
-  (let [doc-root (case type
+  (let [doc-root (case doc-type
                    :task "docs/task_plugins"
                    :connection "docs/connection_plugins")]
     (str doc-root "/" (name-to-filename name "rst"))))
 
-(defn template-path [{:keys [type]}]
+(defn template-path [{:keys [doc-type]}]
   "Find the template for the documentation type"
-  (case type
+  (case doc-type
     :task "resources/templates/task_doc.rst.mustache"
     :connection "resources/templates/connection_doc.rst.mustache"))
 
@@ -35,15 +35,14 @@
                       :description (str v default)})) options)}) 
 
 (defn prepare-documentation [doc]
-  (case (:type doc)
+  (case (:doc-type doc)
     :task (prepare-task-documentation doc)
     :connection doc))
 
 (def documentation (atom {}))
 
-(defn defdocs [type md]
-  (let [docs (assoc md :type type)]
-    (swap! documentation assoc (keyword (:name md)) docs)))
+(defn defdocs [md]
+  (swap! documentation assoc (keyword (:name md)) md))
 
 (defn template-doc! [conn doc-key]
   (let [doc (-> documentation deref doc-key)]

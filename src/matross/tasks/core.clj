@@ -26,7 +26,9 @@ The arguments are the same as `defn`. The only expectation is that the first arg
     `(do
        (defn ~@fdecl)
 
-       (defdocs :task (meta #'~type))
+       (alter-meta! #'~type #(assoc %1 :doc-type :task))
+
+       (defdocs (meta #'~type))
 
        (defmethod matross.tasks.core/get-task (keyword '~type) [spec#]
          (reify
