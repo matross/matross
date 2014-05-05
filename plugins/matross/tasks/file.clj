@@ -26,37 +26,43 @@
 
 set -e
 
-if [ $absent = MATROSS ]; then
+if [ $absent = MATROSS ]
+then
   rm -r {{ path }}
   exit 0
 fi
 
-if [ $directory = MATROSS ]; then
+if [ $directory = MATROSS ]
+then
   mkdir -p {{ path }}
 fi
 
-if [ $file = MATROSS ]; then
+if [ $file = MATROSS ]
+then
   touch {{ path }}
 fi
 
-if [ -n \"$chmod\"]; then
+if [ -n \"$chmod\" ]
+then
   chmod $chmod {{ path }} 
 fi
 
-if [ -n \"$chown\"]; then
+if [ -n \"$chown\" ]
+then
   chown $chown {{ path }}
 fi
 ")
 
 (defn get-env [{:keys [state mode owner group]}]
-  (let [owner
+  (let [matross-key "MATROSS"
+        owner
          (cond
            (and owner group) (str owner ":" group)
            group (str ":" group)
            owner owner
            :else nil)]
-    {:file (if (= :file state) "MATROSS")
-     :directory (if (= :file state) "MATROSS")
-     :absent (if (= :absent state) "MATROSS")
+    {:file      (if (= :file state)      matross-key)
+     :directory (if (= :directory state) matross-key)
+     :absent    (if (= :absent state)    matross-key)
      :chmod mode
      :chown owner}))
