@@ -8,13 +8,16 @@
 
 (deftest ^:integration template-test
   (task-tests test-conn
-   (with-temp-files test-conn [tmp-file]
-     (let [template  "Hello, {{name}}."
-           conf {:type :template :inline template :dest tmp-file :vars {:name "derpy"}}
-           result (run-task test-conn conf)]
-       (is (:succeeded? result)))
-     (let [result-buffer (new StringWriter)
-           conf {:type :stream-from-file :src tmp-file :dest result-buffer}
-           result (run-task test-conn conf)]
-       (is (:succeeded? result) "got the file")
-       (is (= (.toString result-buffer) "Hello, derpy."))))))
+    (with-temp-files test-conn [tmp-file]
+
+      (testing "can write template files"
+        (let [template  "Hello, {{name}}."
+              write-template {:type :template :inline template :dest tmp-file :vars {:name "derpy"}}]
+          (is (:succeeded? (run-task test-conn write-template)) "writes succesfully")))
+
+      (testing "templated files contain correct contents"
+        (let [template-result "Hello, derpy."
+              result-buffer (new StringWriter)
+              read-file {:type :stream-from-file :src tmp-file :dest result-buffer}]
+          (is (:succeeded? (run-task test-conn read-file))  "got the file")
+          (is (= (.toString result-buffer) template-result) "ran template through mustache engine"))))))

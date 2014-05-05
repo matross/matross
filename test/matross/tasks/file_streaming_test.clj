@@ -8,16 +8,16 @@
 (def file-contents "This is some test content")
 
 (deftest ^:integration file-stream-tests
-  (task-tests
-   test-conn
-   (testing "File Read and Write Capabilities")
-   (with-temp-files test-conn [target]
-     (let [send-result (run-task test-conn
-                                 {:type :stream-to-file :src file-contents :dest target})]
-       (is (:succeeded? send-result) "stream to file succeeded"))
+  (task-tests test-conn
 
-     (let [result-buffer (new StringWriter)
-           get-result (run-task test-conn
-                                {:type :stream-from-file :src target :dest result-buffer})]
-       (is (:succeeded? get-result) "retrieved file")
-       (is (= (.toString result-buffer) file-contents))))))
+    (testing "File Read and Write Capabilities")
+      (with-temp-files test-conn [target]
+        (let [write-file {:type :stream-to-file :src file-contents :dest target}
+              send-result (run-task test-conn write-file)]
+          (is (:succeeded? send-result) "stream to file succeeded"))
+        
+        (let [result-buffer (new StringWriter)
+              read-file {:type :stream-from-file :src target :dest result-buffer}
+              get-result (run-task test-conn read-file)]
+          (is (:succeeded? get-result) "retrieved file")
+          (is (= (.toString result-buffer) file-contents))))))

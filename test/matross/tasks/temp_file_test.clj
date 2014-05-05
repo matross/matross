@@ -6,7 +6,8 @@
 
 (deftest ^:integration temp-file-test
   (task-tests test-conn
-    (testing "macro"
+
+    (testing "with-temp-files macro"
       (let [tmp-file* (atom nil)]
         (with-temp-files test-conn [tmp-file]
           (reset! tmp-file* tmp-file)
