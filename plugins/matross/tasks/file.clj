@@ -11,7 +11,9 @@
              :mode "unix file permissions"
              :owner "file owner"
              :group "file group"}
-   :defaults {:state :file}}
+   :defaults {:state :file}
+   :examples [{:type :file :path "/tmp/sensitive-file" :state :absent}
+              {:type :file :path "/etc/db/required-directory" :state :directory :owner "root" :group "db" :mode 750}]}
 
   [conn conf]
   (let [env (get-env conf)]

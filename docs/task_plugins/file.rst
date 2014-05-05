@@ -8,6 +8,8 @@ Example
 
 .. code-block:: clojure
 
+   {:path "/tmp/sensitive-file", :type :file, :state :absent}
+   {:path "/etc/db/required-directory", :group "db", :mode 750, :type :file, :state :directory, :owner "root"}
 
 Configuration
 ~~~~~~~~~~~~~
