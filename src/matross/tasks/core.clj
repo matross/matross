@@ -37,7 +37,8 @@
          (reify
            matross.tasks.core/ITask
            (exec [_# conn#]
-             (~type conn# spec#)))))))
+             (let [spec# (merge (get (meta #'~type) :defaults {}) spec#)]
+               (~type conn# spec#))))))))
 
 (defn run-task [conn conf]
   (exec (get-task conf) conn))

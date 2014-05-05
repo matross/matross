@@ -37,8 +37,7 @@
 
   [conn conf]
   (with-temp-files conn [script]
-    (let [conf (merge defaults conf)
-          src (get-script conf)
+    (let [src (get-script conf)
           final (run-task conn (template-conf conf src script))]
       (run-task conn {:type :command :command (str "chmod +x " script)})
       (run-task conn {:type :command :command script :env (get conf :env {})}))))

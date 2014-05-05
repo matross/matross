@@ -52,7 +52,7 @@ then
 fi
 ")
 
-(defn get-env [{:keys [state mode owner group] :or {state :file}}]
+(defn get-env [{:keys [state mode owner group]}]
   (let [owner
          (cond
            (and owner group) (str owner ":" group)
