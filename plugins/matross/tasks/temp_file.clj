@@ -25,13 +25,13 @@
   "Evaluate the body with the names bound to temp file paths on the target machine. After the
    body has been evaluated, delete the temp files from the target machine."
   [conn bindings & body]
-  (cond (some #(= conn %1) bindings)
-        (throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
-
-        :else
-        `(let [~@(interleave bindings
-                             (map (fn [b] `(get-in (run-task ~conn {:type :temp-file}) [:data :path])) bindings))]
-           (try
-             ~@body
+  (cond
+    (some #(= conn %1) bindings)
+      (throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
+    :else
+      (let [get-tmpfile (fn [_] `(-> (run-task ~conn {:type :temp-file}) (get-in [:data :path])))]
+        `(let [~@(interleave bindings (map get-tmpfile bindings))
+               cleanup# (str "/bin/rm -f " (clojure.string/join " " ~bindings))]
+           (try ~@body
              (finally
-               (run-task ~conn {:type :command :command (str "/bin/rm -f " (clojure.string/join " " ~bindings))}))))))
+               (run-task ~conn {:type :command :command cleanup#})))))))
