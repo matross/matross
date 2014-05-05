@@ -25,18 +25,18 @@
 
 set -e
 
-if [ -n \"$is_absent\" ]
+if [ \"$is_absent\" = true ]
 then
   rm -rf {{ path }}
   exit 0
 fi
 
-if [ \"$is_directory\" ]
+if [ \"$is_directory\" = true ]
 then
   mkdir -p {{ path }}
 fi
 
-if [ \"$is_file\" ]
+if [ \"$is_file\" = true ]
 then
   touch {{ path }}
 fi
@@ -52,15 +52,15 @@ then
 fi
 ")
 
-(defn get-env [{:keys [state mode owner group]}]
+(defn get-env [{:keys [state mode owner group] :or {state :file}}]
   (let [owner
          (cond
            (and owner group) (str owner ":" group)
            group (str ":" group)
            owner owner
            :else nil)]
-    {:is_file      (or (= :file state))
-     :is_directory (or (= :directory state))
-     :is_absent    (or (= :absent state))
+    {:is_file      (= :file state)
+     :is_directory (= :directory state)
+     :is_absent    (= :absent state)
      :chmod mode
      :chown owner}))

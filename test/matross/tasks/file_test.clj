@@ -18,7 +18,7 @@
 
     (testing "can create files"
       (with-temp-files test-conn [file]
-        (let [remove-file {:type :file :state :absent :path file}
+        (let [remove-file {:type :file :path file :state :absent}
               create-file {:type :file :path file}
               file-exists {:type :command :command (str "test -f " file)}]
           (is (:succeeded? (run-task test-conn remove-file)) "initial state is empty")
