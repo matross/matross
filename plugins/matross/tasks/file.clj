@@ -15,29 +15,28 @@
 
   [conn conf]
   (let [env (get-env conf)]
-    (run-task {:type :script
-               :inline script
-               :vars conf
-               :env (get-env conf)})))
+    (run-task conn {:type :script
+                    :inline script
+                    :vars conf
+                    :env (get-env conf)})))
 
 (def script
-"
-#!/bin/sh
+"#!/bin/sh
 
 set -e
 
-if [ $absent = MATROSS ]
+if [ -n \"$is_absent\" ]
 then
-  rm -r {{ path }}
+  rm -rf {{ path }}
   exit 0
 fi
 
-if [ $directory = MATROSS ]
+if [ \"$is_directory\" ]
 then
   mkdir -p {{ path }}
 fi
 
-if [ $file = MATROSS ]
+if [ \"$is_file\" ]
 then
   touch {{ path }}
 fi
@@ -54,15 +53,14 @@ fi
 ")
 
 (defn get-env [{:keys [state mode owner group]}]
-  (let [matross-key "MATROSS"
-        owner
+  (let [owner
          (cond
            (and owner group) (str owner ":" group)
            group (str ":" group)
            owner owner
            :else nil)]
-    {:file      (if (= :file state)      matross-key)
-     :directory (if (= :directory state) matross-key)
-     :absent    (if (= :absent state)    matross-key)
+    {:is_file      (or (= :file state))
+     :is_directory (or (= :directory state))
+     :is_absent    (or (= :absent state))
      :chmod mode
      :chown owner}))
