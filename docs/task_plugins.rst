@@ -14,6 +14,7 @@ The core set of task plugins include:
    task_plugins/command
    task_plugins/script
    task_plugins/template
+   task_plugins/file
    task_plugins/temp_file
    task_plugins/stream_to_file
    task_plugins/stream_from_file
