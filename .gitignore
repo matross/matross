@@ -11,3 +11,4 @@ pom.xml.asc
 .lein-failures
 /.vagrant
 .test/ssh-configs
+.nrepl-port
