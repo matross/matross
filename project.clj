@@ -1,4 +1,4 @@
-(defproject matross "0.1.0-SNAPSHOT"
+(defproject matross/matross "0.1.0-SNAPSHOT"
   :aot :all
   :url "http://github.com/matross/matross"
   :license {:name "MIT"
