@@ -14,12 +14,10 @@
   (testing "Templating occurs properly"
     (let [cr (config-resolver {:user {:foo "{{fact::bar}}" :baz "{{foo}}"}
                                :fact {:bar "herp"}})]
-      (println (:baz cr))
       (is (= (:foo cr) ((keyword "fact::bar") cr)))
       (is (= (:foo cr) (:baz cr)))))
-
-  (comment "not working yet" testing "Seq looks ok"
+  
+  (testing "Config resolver is iterable"
     (let [cr (ConfigResolver. {:user {:foo "bar"}} "::" "user")
           s (seq cr)]
-      (is (= (count s) 1))
-)))
+      (is (= (count s) 1)))))

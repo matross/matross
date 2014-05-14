@@ -18,8 +18,7 @@
       (map keyword (clojure.string/split ks (re-pattern ns-sep) 2)))))
 
 (defn- external-key [k ns-sep]
-  (->> k
-       (map name)
+  (->> (map name k)
        (clojure.string/join ns-sep)
        keyword))
 
@@ -41,15 +40,16 @@
   (equiv [this o] (= value o))
   (count [this] (apply + (map #(count (val %1)) value)))
 
-  ;Seqable
-  ; (seq [this] (mapcat (fn [[ns-key m]]
-  ;  (map (fn [child-key cv]
-  ;      (MapEntry. (external-key ns-key child-key) cv)
-  ;  ) m)) value))
+  Seqable
+  (seq [this]
+    (letfn [(ns-entry [ns-key [child-key cv]]
+              (let [ns-ckey (external-key [ns-key child-key] ns-sep) ]
+                (MapEntry. ns-ckey cv)))
+            (ns-maps [[ns-key m]] (map (partial ns-entry ns-key) m))]
+      (mapcat ns-maps value)))
 
-  ; Iterable
-  ; (iterator [this] (SeqIterator. (. this seq)))
-  )
+  Iterable
+  (iterator [this] (SeqIterator. (. this seq))))
 
 (defn config-resolver
   ([m] (config-resolver m "::" "user"))
