@@ -4,9 +4,7 @@
             [me.raynes.conch.low-level :refer [stream-to-string]]))
 
 (deftask temp-file
-  "Low level task to create a temporary file on the target machine.
-
-   Runs ``mktemp $TEMPFILE`` and returns the created file to stdout."
+  "Creates  a temporary file on the target machine and returns the file path in :out"
 
   {:options {:temp-dir "Remote temporary directory (must already exist)"}
    :defaults {:temp-dir "/tmp"}
@@ -22,8 +20,8 @@
     (task-result succeeded? true (assoc data :path temp-file))))
 
 (defmacro with-temp-files
-  "Evaluate the body with the names bound to temp file paths on the target machine. After the
-   body has been evaluated, delete the temp files from the target machine."
+  "Evaluate the body with the symbols in `bindings` bound to temp file paths on the target machine. Once the
+   body has been evaluated, the temp files are deleted from the target machine."
   [conn bindings & body]
   (cond
     (some #(= conn %1) bindings)

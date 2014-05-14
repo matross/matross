@@ -3,9 +3,8 @@
             [clostache.parser :as template]))
 
 (deftask template
-  "Run the contents of the given file or inline template through a mustache template
-   engine and write the result to the desired file on the target machine"
-
+  "Render the :file or :inline content as a mustache template and write the result to the :dest
+file on the target machine."
   {:options {:dest "where to put the templated content"
              :vars "for template substitution"
              :file "a local template file to render"
