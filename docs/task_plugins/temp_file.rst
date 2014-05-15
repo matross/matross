@@ -1,9 +1,7 @@
 temp-file
 ======================================================
 
-Low level task to create a temporary file on the target machine.
-
-Runs ``mktemp $TEMPFILE`` and returns the created file to stdout.
+Creates  a temporary file on the target machine and returns the file path in :out
 
 Example
 ~~~~~~~
@@ -20,6 +18,7 @@ Configuration
 
 ``:temp-dir``
   Remote temporary directory (must already exist) - default: ``/tmp``
+
 
 Resources
 ~~~~~~~~~

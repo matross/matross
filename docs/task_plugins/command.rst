@@ -26,6 +26,7 @@ Configuration
 ``:shell``
   path to shell to use (optional) - default: ``/bin/sh``
 
+
 Resources
 ~~~~~~~~~
 

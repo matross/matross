@@ -1,6 +1,6 @@
 (ns matross.tasks.template
   (:require [matross.tasks.core :refer [deftask run-task]]
-            [clostache.parser :as template]))
+            [stencil.core :as mustache]))
 
 (deftask template
   "Render the :file or :inline content as a mustache template and write the result to the :dest
@@ -17,7 +17,7 @@ file on the target machine."
   [conn {:keys [dest vars file inline]}]
 
   (let [content (if file (slurp file) inline)
-        rendered (template/render content vars)]
+        rendered (mustache/render-string content vars)]
     (run-task conn
               {:type :stream-to-file
                :dest dest

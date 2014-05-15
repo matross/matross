@@ -1,8 +1,8 @@
 template
 ======================================================
 
-Run the contents of the given file or inline template through a mustache template
-engine and write the result to the desired file on the target machine
+Render the :file or :inline content as a mustache template and write the result to the :dest
+file on the target machine.
 
 Example
 ~~~~~~~
@@ -25,6 +25,7 @@ Configuration
 
 ``:vars``
   for template substitution
+
 
 Resources
 ~~~~~~~~~

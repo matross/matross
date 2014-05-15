@@ -2,7 +2,7 @@
   (:require [matross.util :refer [load-plugins!]]
             [matross.connections.core :refer [get-connection]]
             [clojure.string :as string]
-            [clostache.parser :as template]))
+            [stencil.core :as mustache]))
 
 (defn name-to-filename 
   ([n] (name-to-filename n "clj"))
@@ -49,7 +49,7 @@
   (let [doc (-> documentation deref doc-key)]
     (spit
      (doc-path doc)
-     (template/render (slurp (template-path doc)) (prepare-documentation doc)))
+     (mustache/render-string (slurp (template-path doc)) (prepare-documentation doc)))
     (println "wrote:" (doc-path doc))))
 
 (defn -main []

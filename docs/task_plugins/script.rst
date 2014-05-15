@@ -1,8 +1,8 @@
 script
 ======================================================
 
-Execute a script file or an inline script on the target machine,
-optionally running the contents through the templating engine prior to transfer.
+Execute a script :file or :inline content on the target machine,
+optionally (by default) rendering it as a mustache template prior to execution.
 
 See also ``matross.tasks.command``
 
@@ -30,6 +30,7 @@ Configuration
 
 ``:vars``
   map of vars for templating (optional) - default: ``{}``
+
 
 Resources
 ~~~~~~~~~
