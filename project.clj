@@ -7,6 +7,8 @@
   :test-paths ["test" "plugins"]
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.cli "0.3.1"]
+                 [matross/mapstache "0.2.0-SNAPSHOT"]
+                 [matross/crosshair "0.1.0-SNAPSHOT"]
                  [com.cemerick/pomegranate "0.3.0"]
                  [me.raynes/conch "0.6.0"]
                  [me.raynes/fs "1.4.5"]
