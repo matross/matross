@@ -6,7 +6,7 @@
                        (clojure.string/join ", " keys)
                        ", but found: "
                        (clojure.string/join ", " found))) {} found))
-(defn only-one-of [& keys]
+(defn only-one-of [keys]
   (fn [m]
     (let [found-keys (->> keys
                           (map #(if (contains? m %) % false))

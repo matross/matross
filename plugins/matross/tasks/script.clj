@@ -37,7 +37,7 @@
                :file "hello.sh.mustache"
                :vars {:cool "script, yo"}}]
    :validator (validation-set
-               (only-one-of :file :inline))}
+               (only-one-of [:file :inline]))}
 
   [conn conf]
   (with-temp-files conn [script]

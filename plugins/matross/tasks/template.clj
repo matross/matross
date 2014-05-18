@@ -16,7 +16,7 @@ file on the target machine."
                :vars {:example "matross"}
                :dest "~/wow"}]
    :validator (validation-set
-               (only-one-of :file :inline))}
+               (only-one-of [:file :inline]))}
 
   [conn {:keys [dest vars file inline]}]
 
