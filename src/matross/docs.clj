@@ -1,5 +1,5 @@
 (ns matross.docs
-  (:require [matross.util :refer [load-plugins!]]
+  (:require [matross.plugins :refer [load-plugins!]]
             [matross.connections.core :refer [get-connection]]
             [clojure.string :as string]
             [stencil.core :as mustache]))

@@ -1,5 +1,6 @@
 (ns matross.executor
-  (:require [matross.util :refer [load-plugins! prepare]]
+  (:require [matross.util :refer [prepare]]
+            [matross.plugins :refer [load-plugins!]]
             [matross.tasks.core :refer [get-task exec]]
             [matross.connections.core :refer [connect disconnect]]
             [matross.connections.debug :refer [debug-connection debug-process]]))
