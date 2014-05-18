@@ -16,7 +16,8 @@
 (defn get-sudo?-connection [spec]
   ;; get a connection, optionally wrapping it with sudo configuration
   (let [conn (get-connection spec)]
-    (if-not (:sudo spec) conn
+    (if-not (:sudo spec)
+      conn
       (get-sudo-connection conn spec))))
 
 (defn prepare [opts conf]
