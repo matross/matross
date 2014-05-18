@@ -1,7 +1,8 @@
 (ns matross.tasks.stream-from-file
   (:require [me.raynes.conch.low-level :as sh]
             [matross.tasks.core :refer [deftask task-result]]
-            [matross.connections.core :refer [run exit-ok?]]))
+            [matross.connections.core :refer [run exit-ok?]]
+            [validateur.validation :refer :all]))
 
 (deftask stream-from-file
   "Low level task to stream the contents of a file on the target machine
@@ -11,7 +12,10 @@
              :dest "destination writer"}
    :examples [{:type :stream-from-file
                :src "~/.bashrc"
-               :dest 'my-input-stream}]}
+               :dest 'my-input-stream}]
+   :validator (validation-set
+               (presence-of :src)
+               (presence-of :dest))}
 
   [conn {:keys [src dest]}]
   (let [cat (str "cat " src)

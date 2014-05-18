@@ -1,5 +1,6 @@
 (ns matross.tasks.file
-  (:require [matross.tasks.core :refer [deftask run-task]]))
+  (:require [matross.tasks.core :refer [deftask run-task]]
+            [validateur.validation :refer :all]))
 
 (declare script get-env get-vars)
 
@@ -13,7 +14,10 @@
              :group "file group"}
    :defaults {:state :file}
    :examples [{:type :file :path "/tmp/sensitive-file" :state :absent}
-              {:type :file :path "/etc/db/required-directory" :state :directory :owner "root" :group "db" :mode 750}]}
+              {:type :file :path "/etc/db/required-directory" :state :directory :owner "root" :group "db" :mode 750}]
+
+   :validator (validation-set
+               (presence-of :path))}
 
   [conn conf]
   (let [env (get-env conf)]

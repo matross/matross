@@ -1,6 +1,7 @@
 (ns matross.tasks.command
   (:require [matross.tasks.core :refer [deftask task-result]]
-            [matross.connections.core :refer [run exit-ok?]]))
+            [matross.connections.core :refer [run exit-ok?]]
+            [validateur.validation :refer :all]))
 
 (deftask command
   "Execute a shell command on the target machine in a normalized environment.
@@ -14,7 +15,10 @@
              :shell "path to shell to use (optional)"}
    :defaults {:shell "/bin/sh" :env {}}
    :examples [{:command "echo $message"
-               :env {:message "hello, world!"}}]}
+               :env {:message "hello, world!"}}]
+
+   :validator (validation-set
+               (presence-of :command))}
 
   [conn {:keys [shell command env]}]
   (let [key=val (fn [[key val]] (-> (name key) (str "=" val)))

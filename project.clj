@@ -10,6 +10,7 @@
                  [matross/mapstache "0.2.0-SNAPSHOT"]
                  [matross/crosshair "0.1.0-SNAPSHOT"]
                  [com.cemerick/pomegranate "0.3.0"]
+                 [com.novemberain/validateur "2.1.0"]
                  [me.raynes/conch "0.6.0"]
                  [me.raynes/fs "1.4.5"]
                  [clj-ssh "0.5.7"]

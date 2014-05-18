@@ -1,6 +1,8 @@
 (ns matross.tasks.template
   (:require [matross.tasks.core :refer [deftask run-task]]
-            [stencil.core :as mustache]))
+            [stencil.core :as mustache]
+            [validateur.validation :refer :all]
+            [matross.validators :refer :all]))
 
 (deftask template
   "Render the :file or :inline content as a mustache template and write the result to the :dest
@@ -12,7 +14,9 @@ file on the target machine."
    :examples [{:type :template
                :inline "{{ example }} is cool!"
                :vars {:example "matross"}
-               :dest "~/wow"}]}
+               :dest "~/wow"}]
+   :validator (validation-set
+               (only-one-of :file :inline))}
 
   [conn {:keys [dest vars file inline]}]
 

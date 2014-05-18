@@ -1,7 +1,9 @@
 (ns matross.tasks.script
   (:require [matross.tasks.core :refer [deftask run-task]]
+            [matross.validators :refer :all]
             [matross.tasks.template :as template]
-            [matross.tasks.temp-file :refer [with-temp-files]]))
+            [matross.tasks.temp-file :refer [with-temp-files]]
+            [validateur.validation :refer :all]))
 
 (defn get-script [conf]
   (if (:file conf)
@@ -33,7 +35,9 @@
    :defaults defaults
    :examples [{:type :script
                :file "hello.sh.mustache"
-               :vars {:cool "script, yo"}}]}
+               :vars {:cool "script, yo"}}]
+   :validator (validation-set
+               (only-one-of :file :inline))}
 
   [conn conf]
   (with-temp-files conn [script]

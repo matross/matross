@@ -1,7 +1,6 @@
 (ns matross.config-test
   (:require [clojure.test :refer :all]
-            [matross.config :refer :all])
-  (:import matross.config.ConfigResolver))
+            [matross.config :refer :all]))
 
 
 (deftest config-resolver-behaves

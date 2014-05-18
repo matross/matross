@@ -1,5 +1,6 @@
 (ns matross.tasks.core
-  (:require [matross.docs :refer [defdocs]]))
+  (:require [matross.docs :refer [defdocs]]
+            [validateur.validation :refer [valid?]]))
 
 (defmulti get-task #(keyword (:type %1)))
 
@@ -37,8 +38,13 @@
          (reify
            matross.tasks.core/ITask
            (exec [_# conn#]
-             (let [spec# (merge (get (meta #'~type) :defaults {}) spec#)]
-               (~type conn# spec#))))))))
+             (let [spec# (merge (get (meta #'~type) :defaults {}) spec#)
+                   validator# (:validator (meta #'~type))
+                   valid# (if validator# (valid? validator# spec#) true)]
+
+               (if valid#
+                 (~type conn# spec#)
+                 (throw (IllegalArgumentException. (pr-str (validator# spec#))))))))))))
 
 (defn run-task [conn conf]
   (exec (get-task conf) conn))
