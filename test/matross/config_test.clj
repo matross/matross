@@ -14,4 +14,10 @@
     (let [cr (config-resolver {:default {:foo "{{fact/bar}}" :baz "{{foo}}"}
                                :fact {:bar "herp"}})]
       (is (= (:foo cr) ((keyword "fact/bar") cr)))
-      (is (= (:foo cr) (:baz cr))))))
+      (is (= (:foo cr) (:baz cr)))))
+
+  (testing "I can use select-keys"
+    (let [cr (config-resolver {:default {:a "{{b}}" :b "value"}})
+          sub-set (select-keys cr [:a])]
+      (println sub-set)
+      (is (= (:a sub-set) "value")))))
