@@ -1,6 +1,7 @@
 (ns matross.util
   (:require [matross.connections.core :refer [get-connection]]
             [matross.connections.sudo :refer [get-sudo-connection]]
+            [matross.config :refer [config-resolver]]
             [matross.input :refer [get-passwords]]))
 
 ;; junk namespace... needs re-org
@@ -20,10 +21,18 @@
       conn
       (get-sudo-connection conn spec))))
 
+(defn get-task-vars [task conf]
+  (let [conf (update-in conf [:vars] merge task)
+        conf (config-resolver {:vars (:vars conf)
+                               :system {}} "/" "vars")]
+    (select-keys conf (keys task))))
+
 (defn prepare [opts conf]
   ;; preprocess user provided configuration using
   ;; opts built up from  the cli
   (let [opts (merge (get-passwords opts) opts)
         get-conn-config (partial get-connection-config opts)
         get-connection (comp get-sudo?-connection get-conn-config)]
-    (update-in conf [:connections] (partial map get-connection))))
+        (-> conf
+            (update-in [:tasks] (partial map #(get-task-vars % conf)))
+            (update-in [:connections] (partial map get-connection)))))

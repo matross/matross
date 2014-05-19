@@ -14,7 +14,8 @@
                  [me.raynes/conch "0.6.0"]
                  [me.raynes/fs "1.4.5"]
                  [clj-ssh "0.5.7"]
-                 [stencil "0.3.3"]]
+                 [stencil "0.3.3"]
+                 [matross/crosshair "0.1.0-SNAPSHOT"]]
   :test-selectors {:default (complement :integration)
                    :integration :integration
                    :all (constantly true)})

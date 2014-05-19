@@ -1,5 +1,8 @@
-{:connections [{:type :local}
-               {:type :ssh :hostname "localhost"}]
- :tasks [{:type :command
-          :command "/bin/echo -n `whoami`: $message"
-          :env {:message "hello world!"}}]}
+{:connections [{:type :local}]
+ :vars {
+   :message "hello, world!"
+ }
+ :tasks [{
+    :type :command
+    :command "/bin/echo -n `whoami` says: {{ message }}"
+ }]}
