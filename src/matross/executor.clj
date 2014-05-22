@@ -1,5 +1,7 @@
 (ns matross.executor
-  (:require [matross.util :refer [prepare]]
+  (:require [matross.config :refer [config-resolver]]
+            [matross.strata :refer [strata-fifo]]
+            [matross.util :refer [prepare]]
             [matross.plugins :refer [load-plugins!]]
             [matross.tasks.core :refer [get-task exec]]
             [matross.connections.core :refer [connect disconnect]]
@@ -10,15 +12,27 @@
     (debug-connection conn)
     conn))
 
-(defn test-run-connection! [opts conn tasks]
+(defn test-run-connection! [base-config conn tasks]
   (connect conn)
-  (doseq [task tasks]
-    (-> (get-task task)
-        (exec conn)
-        :data
-        debug-process
-        prn))
+  (reduce-kv (fn [previous k task]
+               (let [config (assoc base-config
+                              :task {:current task}
+                              :previous previous)
+                     resolver (config-resolver config)
+                     task-instance (get-task (:task/current resolver))
+                     result (exec task-instance conn)
+                     previous (:data result)]
+                 (prn (debug-process previous))
+                 previous))
+             nil
+             tasks)
   (disconnect conn))
+
+(defn prepare-configs [opts config]
+  (let [vars (-> (strata-fifo)
+                 (conj (:extra-vars (:options opts)))
+                 (conj (:vars config)))]
+    {:var vars}))
 
 (defn run! [opts config]
   (let [{:keys [connections tasks]} (prepare opts config)]
@@ -26,6 +40,9 @@
     (doseq [conn connections]
       (let [conn (runtime-connection opts conn)]
         (println "Running against:" conn)
-        (test-run-connection! opts conn tasks)
+        (test-run-connection!
+         (prepare-configs opts config)
+         conn
+         tasks)
         (println)))
     (shutdown-agents)))

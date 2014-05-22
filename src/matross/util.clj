@@ -21,12 +21,6 @@
       conn
       (get-sudo-connection conn spec))))
 
-(defn get-task-vars [task conf]
-  (let [conf (update-in conf [:vars] merge task)
-        conf (config-resolver {:vars (:vars conf)
-                               :system {}} "/" "vars")]
-    (select-keys conf (keys task))))
-
 (defn prepare [opts conf]
   ;; preprocess user provided configuration using
   ;; opts built up from  the cli
@@ -34,5 +28,4 @@
         get-conn-config (partial get-connection-config opts)
         get-connection (comp get-sudo?-connection get-conn-config)]
         (-> conf
-            (update-in [:tasks] (partial map #(get-task-vars % conf)))
             (update-in [:connections] (partial map get-connection)))))
