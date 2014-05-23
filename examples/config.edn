@@ -1,0 +1,39 @@
+;; external config file
+{:host-groups [ {:type :local
+                 :name "local"}
+                {:type :ssh
+                 :name "ssh-servers"
+                 :hosts [ "127.0.0.1"
+                          "localhost"
+               #hostrange "web{01..20}.example.com"]} ]
+ :apps {
+   :web {
+     :host-groups [ "local", "ssh-servers", {:type :ssh ,,,}]
+     :sudo true
+     :sudo-user "www-data"
+     :vars {
+       :message "hello, web!"
+     }
+   }
+   :db {
+     :connections [ "ssh-servers" ]
+     :sudo true
+     :sudo-user "postgres"
+     :vars {
+       :message "hello, db!"
+     }
+   }
+ }
+ :defaults {
+   :vars {
+     :message "hello, default!"
+   }
+   :tasks {
+     :type :command
+     :tasks {
+       :command {
+         :shell "/bin/bash"
+       }
+     }
+   }
+ }}

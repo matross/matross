@@ -1,8 +1,7 @@
-{:connections [{:type :local}]
- :vars {
-   :message "hello, world!"
- }
- :tasks [{
-    :type :command
-    :command "/bin/echo -n `whoami` says: {{ message }}"
- }]}
+;; proc file
+{:name "greetings from matross"
+ :apps [ "web", "db" ]
+ :tasks [
+   {:name "sending a message" 
+    :command "/bin/echo -n {{ message }}"}
+ ]}
