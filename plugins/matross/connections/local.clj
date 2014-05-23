@@ -21,3 +21,6 @@
 
 (defmethod get-connection :local [spec]
   (new Local spec))
+
+(defn local-connection []
+  (new Local {}))
