@@ -42,6 +42,6 @@
   [conn conf]
   (with-temp-files conn [script]
     (let [src (get-script conf)
-          final (run-task conn (template-conf conf src script))]
-      (run-task conn {:type :command :command (str "chmod +x " script)})
-      (run-task conn {:type :command :command script :env (get conf :env {})}))))
+          template-result (run-task conn (template-conf conf src script))
+          command (str "chmod +x " script "; " script)]
+      (run-task conn {:type :command :command command :env (get conf :env {})}))))
