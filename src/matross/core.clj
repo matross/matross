@@ -8,6 +8,10 @@
    ["-s" "--ask-password"]
    ["-S" "--ask-sudo-pass"]
    ["-d" "--debug"]
+   ["-v" nil "Verbosity Level"
+    :id :verbosity
+    :default 0
+    :assoc-fn (fn [m k _] (update-in m [k] (fn [v] (min 3 (inc v)))))]
    ["-e" "--extra-var KEY=VALUE" "Extra variables to set at run time"
     :id :extra-vars
     :assoc-fn (fn [m k v]
