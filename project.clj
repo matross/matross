@@ -18,6 +18,14 @@
                  [me.raynes/fs "1.4.5"]
                  [clj-ssh "0.5.7"]
                  [stencil "0.3.3"]]
+  :pom-addition [:developers [:developer
+                              [:id "zeroem"]
+                              [:name "Darrell Hamilton"]
+                              [:url "https://github.com/zeroem"]]
+                 [:developer
+                              [:id "eggsby"]
+                              [:name "Thomas Omans"]
+                              [:url "https://github.com/eggsby"]]]
   :plugins [[perforate "0.3.3"]]
   :test-selectors {:default (complement :integration)
                    :integration :integration
