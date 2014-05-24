@@ -1,8 +1,8 @@
 (defproject matross/matross "0.1.0-SNAPSHOT"
   :aot :all
   :url "http://github.com/matross/matross"
-  :license {:name "MIT"
-            :url "https://github.com/matross/matross/blob/master/LICENSE"}
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
   :main matross.core
   :test-paths ["test" "plugins"]
   :dependencies [[org.clojure/clojure "1.6.0"]
