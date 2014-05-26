@@ -5,8 +5,7 @@
             [validateur.validation :refer :all]))
 
 (deftask stream-from-file
-  "Low level task to stream the contents of a file on the target machine
-   to the given writer locally."
+  "Write the contents of a file on a remote system, :src, to the given Writer, :dest"
 
   {:options {:src "remote file path"
              :dest "destination writer"}

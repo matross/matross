@@ -7,6 +7,7 @@
 (deftask template
   "Render the :file or :inline content as a mustache template and write the result to the :dest
 file on the target machine."
+
   {:options {:dest "where to put the templated content"
              :vars "for template substitution"
              :file "a local template file to render"
@@ -16,7 +17,8 @@ file on the target machine."
                :vars {:example "matross"}
                :dest "~/wow"}]
    :validator (validation-set
-               (only-one-of [:file :inline]))}
+               (only-one-of [:file :inline])
+               (if-set-file-exists :file))}
 
   [conn {:keys [dest vars file inline]}]
 

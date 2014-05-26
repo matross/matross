@@ -4,7 +4,7 @@
             [validateur.validation :refer :all]))
 
 (deftask stream-to-file
-  "Write the contents of the given source input to the desired file on the target machine."
+  "Write the contents of the given String or Reader, :src, to a file on the target machine, :dest."
 
   {:options {:src "source input, string or stream"
              :dest "remote filepath"}

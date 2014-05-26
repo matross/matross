@@ -12,7 +12,7 @@
 (deftest template-validator-test
   (testing "the validator works"
     (let [v (:validator (meta #'template))
-          good-map {:file "path" :vars {}}
+          good-map {:inline "template-string" :vars {}}
           bad-map {:file "path" :inline "content"}]
       (is v "We got a validator back")
       (is (valid? v good-map))

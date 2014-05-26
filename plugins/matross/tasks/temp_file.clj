@@ -4,7 +4,7 @@
             [me.raynes.conch.low-level :refer [stream-to-string]]))
 
 (deftask temp-file
-  "Creates  a temporary file on the target machine and returns the file path in :out"
+  "Creates  a temporary file on the target machine and returns the file path in [:data :path]"
 
   {:options {:temp-dir "Remote temporary directory (must already exist)"}
    :defaults {:temp-dir "/tmp"}
@@ -19,10 +19,14 @@
         temp-file (trim-newline (stream-to-string data :out))]
     (task-result succeeded? true (assoc data :path temp-file))))
 
+;; TODO: Optimize this to make a single command call with multiple calls to mktemp
+;;        split on newline, and bind each line to a given binding
 (defmacro with-temp-files
   "Evaluate the body with the symbols in `bindings` bound to temp file paths on the target machine. Once the
    body has been evaluated, the temp files are deleted from the target machine."
+
   [conn bindings & body]
+
   (cond
     (some #(= conn %1) bindings)
       (throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))

@@ -5,7 +5,7 @@
 (declare script get-env get-vars)
 
 (deftask file
-  "Coerces files on the remote filesystem"
+  "Ensure that a path on the target filesystem is in the defined state."
 
   {:options {:path "remote file path"
              :state "one of: ``:file, :directory, :absent``"
@@ -17,7 +17,8 @@
               {:type :file :path "/etc/db/required-directory" :state :directory :owner "root" :group "db" :mode 750}]
 
    :validator (validation-set
-               (presence-of :path))}
+               (presence-of :path)
+               (inclusion-of :state :in #{:file :directory :absent}))}
 
   [conn conf]
   (let [env (get-env conf)]
@@ -58,7 +59,12 @@ then
 fi
 ")
 
-(defn get-env [{:keys [state mode owner group]}]
+(defn get-env
+  "Convert the task parameters into an Environment map that will be passed
+  to the above shell command."
+
+  [{:keys [state mode owner group]}]
+
   (let [owner
          (cond
            (and owner group) (str owner ":" group)

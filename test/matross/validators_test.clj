@@ -27,3 +27,11 @@
           bad-map {:a "foo" :b "bar"}]
       (is (valid? vs good-map))
       (is (invalid? vs bad-map)))))
+
+(deftest if-set-file-exists-test
+  (testing "A hopefully non-existant file fails"
+    (let [m {:foo "/tmp/afjlfjasljsdfjlsfjks"}
+          v-foo (if-set-file-exists :foo)
+          v-bar (if-set-file-exists :bar)]
+      (is (= (v-bar m) [true {}]))
+      (is (= (first (v-foo m)) false)))))
