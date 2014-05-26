@@ -9,7 +9,7 @@
                  [org.clojure/tools.cli "0.3.1"]
                  [org.clojure/tools.logging "0.2.6"]
                  [org.clojure/tools.reader "0.8.4"]
-                 [matross/crosshair "0.1.0-SNAPSHOT"]
+                 [matross/crosshair "0.1.0"]
                  [matross/mapstache "0.2.0"]
                  [matross/strata "0.1.0"]
                  [com.cemerick/pomegranate "0.3.0"]
