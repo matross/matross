@@ -3,14 +3,10 @@
             [clojure.string :refer [trim-newline]]
             [me.raynes.conch.low-level :refer [stream-to-string]]))
 
-
 (defn temp-file-command
   "Generates the mktemp shell command for the given options"
   [{:keys [temp-dir] :or {temp-dir "/tmp"}}]
   (str "mktemp " temp-dir "/matross.XXXXXX"))
-
-(defn n-temp-files-command [opts n]
-  (clojure.string/join "; " (repeatedly n #(temp-file-command opts))))
 
 (deftask temp-file
   "Creates  a temporary file on the target machine and returns the file path in [:data :path]"
@@ -27,6 +23,14 @@
         {:keys [data succeeded?]} (run-task conn {:type :command :command mktemp})
         temp-file (trim-newline (stream-to-string data :out))]
     (task-result succeeded? true (assoc data :path temp-file))))
+
+(defn n-temp-files-command [opts n]
+  (clojure.string/join "; " (repeatedly n #(temp-file-command opts))))
+
+(defn temp-file-list [conn command-str]
+  (let [{:keys [data succeeded?]} (run-task conn {:type :command :command command-str})
+        out (stream-to-string data :out)]
+    (clojure.string/split-lines out)))
 
 ;; TODO: Optimize this to make a single command call with multiple calls to mktemp
 ;;        split on newline, and bind each line to a given binding
