@@ -43,12 +43,13 @@
   (let [[opts args] (if (map? (first args))
                       [(first args) (rest args)]
                       [nil args])
+        opts (merge opts {:type :temp-file})
         [bindings body] [(first args) (rest args)]]
     (cond
       (some #(= conn %1) bindings)
       (throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
       :else
-      (let [get-tmpfile (fn [_] `(-> (run-task ~conn (merge ~opts {:type :temp-file})) (get-in [:data :path])))]
+      (let [get-tmpfile (fn [_] `(-> (run-task ~conn ~opts) (get-in [:data :path])))]
         `(let [~@(interleave bindings (map get-tmpfile bindings))
                cleanup# (str "/bin/rm -f " (clojure.string/join " " ~bindings))]
            (try ~@body
