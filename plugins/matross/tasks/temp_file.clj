@@ -9,6 +9,9 @@
   [{:keys [temp-dir] :or {temp-dir "/tmp"}}]
   (str "mktemp " temp-dir "/matross.XXXXXX"))
 
+(defn n-temp-files-command [opts n]
+  (clojure.string/join "; " (repeatedly n #(temp-file-command opts))))
+
 (deftask temp-file
   "Creates  a temporary file on the target machine and returns the file path in [:data :path]"
 
