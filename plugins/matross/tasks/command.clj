@@ -21,6 +21,7 @@
                (presence-of :command))}
 
   [conn {:keys [shell command env]}]
+
   (let [key=val (fn [[key val]] (-> (name key) (str "=" val)))
         cmd (concat ["/usr/bin/env" "-i"] (map key=val env) [shell "-c" command])
         proc (run conn {:cmd cmd})]
