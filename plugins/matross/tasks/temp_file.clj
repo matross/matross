@@ -24,11 +24,9 @@
         temp-file (trim-newline (stream-to-string data :out))]
     (task-result succeeded? true (assoc data :path temp-file))))
 
-(defn n-temp-files-command [opts n]
-  (clojure.string/join "; " (repeatedly n #(temp-file-command opts))))
-
-(defn temp-file-list [conn command-str]
-  (let [{:keys [data succeeded?]} (run-task conn {:type :command :command command-str})
+(defn temp-file-list [conn opts n]
+  (let [command-str (clojure.string/join "; " (repeatedly n #(temp-file-command opts)))
+        {:keys [data succeeded?]} (run-task conn {:type :command :command command-str})
         out (stream-to-string data :out)]
     (clojure.string/split-lines out)))
 
@@ -36,21 +34,25 @@
 ;;        split on newline, and bind each line to a given binding
 (defmacro with-temp-files
   "Evaluate the body with the symbols in `bindings` bound to temp file paths on the target machine. Once the
-   body has been evaluated, the temp files are deleted from the target machine."
+  body has been evaluated, the temp files are deleted from the target machine."
 
   [conn & args]
 
   (let [[opts args] (if (map? (first args))
-                      [(first args) (rest args)]
-                      [nil args])
+                       [(first args) (rest args)]
+                       [nil args])
         opts (merge opts {:type :temp-file})
         [bindings body] [(first args) (rest args)]]
     (cond
       (some #(= conn %1) bindings)
       (throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
       :else
-      (let [get-tmpfile (fn [_] `(-> (run-task ~conn ~opts) (get-in [:data :path])))]
-        `(let [~@(interleave bindings (map get-tmpfile bindings))
+      (let [binding-count (count bindings)
+            temp-files (gensym "temp-files")]
+        `(let [~temp-files (temp-file-list ~conn ~opts ~binding-count)
+               ~@(apply concat
+                        (map-indexed (fn [i v] [v `(nth ~temp-files ~i)])
+                                     bindings))
                cleanup# (str "/bin/rm -f " (clojure.string/join " " ~bindings))]
            (try ~@body
                 (finally
