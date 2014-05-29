@@ -20,4 +20,4 @@
 
 (defcase temp-file-benchmarks :with-temp-files-macro
   [conn _]
-  (with-temp-files conn [a]))
+  (with-temp-files conn [a b c d]))
