@@ -30,30 +30,22 @@
         out (stream-to-string data :out)]
     (clojure.string/split-lines out)))
 
-;; TODO: Optimize this to make a single command call with multiple calls to mktemp
-;;        split on newline, and bind each line to a given binding
 (defmacro with-temp-files
   "Evaluate the body with the symbols in `bindings` bound to temp file paths on the target machine. Once the
   body has been evaluated, the temp files are deleted from the target machine."
 
-  [conn & args]
-
-  (let [[opts args] (if (map? (first args))
-                       [(first args) (rest args)]
-                       [nil args])
-        opts (merge opts {:type :temp-file})
-        [bindings body] [(first args) (rest args)]]
+  [conn bindings & body]
     (cond
       (some #(= conn %1) bindings)
       (throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
       :else
       (let [binding-count (count bindings)
             temp-files (gensym "temp-files")]
-        `(let [~temp-files (temp-file-list ~conn ~opts ~binding-count)
+        `(let [~temp-files (temp-file-list ~conn {:type :temp-file} ~binding-count)
                ~@(apply concat
                         (map-indexed (fn [i v] [v `(nth ~temp-files ~i)])
                                      bindings))
                cleanup# (str "/bin/rm -f " (clojure.string/join " " ~bindings))]
            (try ~@body
                 (finally
-                  (run-task ~conn {:type :command :command cleanup#}))))))))
+                  (run-task ~conn {:type :command :command cleanup#})))))))
