@@ -1,10 +1,6 @@
 (ns matross.tasks.temp-file
   (:require [matross.tasks.core :refer [deftask run-task task-result]]
-            [clojure.string :refer [trim-newline]]
-            [me.raynes.conch.low-level :refer [stream-to-string]]))
-
-(defn temp-file-command
-  "Generates the mktemp shell command for the given options"
+            [clojure.string :refer [trim-newline]] [me.raynes.conch.low-level :refer [stream-to-string]])) (defn temp-file-command "Generates the mktemp shell command for the given options"
   [{:keys [temp-dir] :or {temp-dir "/tmp"}}]
   (str "mktemp " temp-dir "/matross.XXXXXX"))
 
@@ -32,20 +28,33 @@
 
 (defmacro with-temp-files
   "Evaluate the body with the symbols in `bindings` bound to temp file paths on the target machine. Once the
-  body has been evaluated, the temp files are deleted from the target machine."
+  body has been evaluated, the temp files are deleted from the target machine.
 
-  [conn bindings & body]
+  Arguments are either:
+  [connection & body]
+  or
+  [connection temp-file-config & body]
+
+  Where the temp-file-config will be passed to the underlying temp-file implementation."
+
+  [conn & args]
+
+  (let [[opts args] (let [f-el (first args)]
+                      (if (or (map? f-el) (symbol? f-el))
+                       [(first args) (rest args)]
+                       [nil args]))
+        [bindings body] [(first args) (rest args)]]
     (cond
       (some #(= conn %1) bindings)
       (throw (IllegalArgumentException. "Collission between conn and tempfile bindings."))
       :else
       (let [binding-count (count bindings)
             temp-files (gensym "temp-files")]
-        `(let [~temp-files (temp-file-list ~conn {:type :temp-file} ~binding-count)
+        `(let [~temp-files (temp-file-list ~conn (merge {:type :temp-file} ~opts) ~binding-count)
                ~@(apply concat
                         (map-indexed (fn [i v] [v `(nth ~temp-files ~i)])
                                      bindings))
                cleanup# (str "/bin/rm -f " (clojure.string/join " " ~bindings))]
            (try ~@body
                 (finally
-                  (run-task ~conn {:type :command :command cleanup#})))))))
+                  (run-task ~conn {:type :command :command cleanup#}))))))))

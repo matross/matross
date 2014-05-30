@@ -8,9 +8,11 @@
   (task-tests test-conn
 
     (testing "with-temp-files macro"
-      (let [tmp-file* (atom nil)]
-        (with-temp-files test-conn [tmp-file]
+      (let [tmp-file* (atom nil)
+            config {:temp-dir "/home/vagrant"}]
+        (with-temp-files test-conn config [tmp-file]
           (reset! tmp-file* tmp-file)
+          (is (. tmp-file startsWith (:temp-dir config)))
           (is (not (clojure.string/blank? tmp-file)) "Got a file path back")
           (let [proc (run test-conn {:cmd ["test" "-f" tmp-file]})]
             (is (exit-ok? proc) "file exists")))
