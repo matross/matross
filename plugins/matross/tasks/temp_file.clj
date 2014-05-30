@@ -31,9 +31,9 @@
   body has been evaluated, the temp files are deleted from the target machine.
 
   Arguments are either:
-  [connection & body]
+  [connection [bindings] & body]
   or
-  [connection temp-file-config & body]
+  [connection temp-file-config [bindings] & body]
 
   Where the temp-file-config will be passed to the underlying temp-file implementation."
 
