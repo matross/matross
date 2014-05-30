@@ -1,6 +1,8 @@
 (ns matross.tasks.temp-file
   (:require [matross.tasks.core :refer [deftask run-task task-result]]
-            [clojure.string :refer [trim-newline]] [me.raynes.conch.low-level :refer [stream-to-string]])) (defn temp-file-command "Generates the mktemp shell command for the given options"
+            [clojure.string :refer [trim-newline]] [me.raynes.conch.low-level :refer [stream-to-string]]))
+
+(defn temp-file-command "Generates the mktemp shell command for the given options"
   [{:keys [temp-dir] :or {temp-dir "/tmp"}}]
   (str "mktemp " temp-dir "/matross.XXXXXX"))
 
