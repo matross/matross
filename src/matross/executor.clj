@@ -1,6 +1,6 @@
 (ns matross.executor
   (:require [matross.config :refer [config-resolver]]
-            [matross.strata :refer [strata-fifo strata-lifo enable-debug stratum]]
+            [matross.strata :refer [strata-fifo enable-debug stratum]]
             [matross.util :refer [prepare]]
             [matross.plugins :refer [load-plugins!]]
             [matross.tasks.core :refer [get-task task-defaults exec]]
@@ -14,10 +14,10 @@
 
 
 (defn task-strata [spec]
-  (-> (strata-lifo)
+  (-> (strata-fifo)
       (enable-debug)
-      (conj (stratum "Hardcoded task default" (task-defaults spec)))
-      (conj (stratum "Provided task configuration" spec))))
+      (conj (stratum "Provided task configuration" spec))
+      (conj (stratum "Hardcoded task default" (task-defaults spec)))))
 
 (defn test-run-connection! [base-config conn tasks]
   (connect conn)
@@ -37,8 +37,8 @@
 
 (defn prepare-configs [opts config]
   (let [vars (-> (strata-fifo)
-                 (conj (:extra-vars (:options opts)))
-                 (conj (:vars config)))]
+                 (conj (:extra-vars (stratum "Command-line vars" (:options opts))))
+                 (conj (:vars (stratum "Procedure vars" config))))]
     {:var vars}))
 
 (defn run! [opts config]

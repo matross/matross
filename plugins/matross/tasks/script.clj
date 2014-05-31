@@ -6,9 +6,8 @@
             [validateur.validation :refer :all]))
 
 (defn get-script [conf]
-  (if (:file conf)
-    (slurp (:file conf))
-    (get conf :inline "")))
+  (or (get conf :inline)
+      (slurp (get conf :file))))
 
 (defn template-conf [conf src dest]
   (-> conf
@@ -16,10 +15,6 @@
       (assoc :inline src)
       (assoc :dest (clojure.string/trim-newline dest))
       (update-in [:vars] #(if (:template conf) %1 {}))))
-
-(def defaults {:template true
-               :vars {}
-               :env {}})
 
 (deftask script
   "Execute a script :file or :inline content on the target machine,
@@ -32,7 +27,10 @@
              :template "whether or not to template the script"
              :env "environment variables to expose to the script"
              :vars "map of vars for templating (optional)"} 
-   :defaults defaults
+
+   :defaults {:template true
+               :vars {}
+               :env {}}
    :examples [{:type :script
                :file "hello.sh.mustache"
                :vars {:cool "script, yo"}}]
