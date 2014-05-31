@@ -52,7 +52,9 @@
       :else
       (let [binding-count (count bindings)
             temp-files (gensym "temp-files")]
-        `(let [~temp-files (temp-file-list ~conn (merge {:type :temp-file} ~opts) ~binding-count)
+        `(let [opts# ~opts
+               _# (if (not (or (map? opts#) (nil? opts#))) (throw (IllegalArgumentException. "Configuration must be a map or nil.")))
+               ~temp-files (temp-file-list ~conn (merge {:type :temp-file} opts#) ~binding-count)
                ~@(apply concat
                         (map-indexed (fn [i v] [v `(nth ~temp-files ~i)])
                                      bindings))
