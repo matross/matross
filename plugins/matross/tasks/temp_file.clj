@@ -3,8 +3,8 @@
             [clojure.string :refer [trim-newline]] [me.raynes.conch.low-level :refer [stream-to-string]]))
 
 (defn temp-file-command "Generates the mktemp shell command for the given options"
-  [{:keys [temp-dir] :or {temp-dir "/tmp"}}]
-  (str "mktemp " temp-dir "/matross.XXXXXX"))
+  [{:keys [temp-dir pattern] :or {temp-dir "/tmp" pattern "matross.XXXXXX"}}]
+  (str "mktemp " temp-dir "/" pattern))
 
 (deftask temp-file
   "Creates  a temporary file on the target machine and returns the file path in [:data :path]"
