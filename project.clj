@@ -12,7 +12,7 @@
                  [org.clojure/tools.logging "0.2.6"]
                  [org.clojure/tools.reader "0.8.4"]
                  [matross/crosshair "0.1.0"]
-                 [matross/mapstache "0.2.0"]
+                 [matross/mapstache "0.2.1"]
                  [matross/strata "0.1.0"]
                  [com.cemerick/pomegranate "0.3.0"]
                  [com.novemberain/validateur "2.1.0"]
