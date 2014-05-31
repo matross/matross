@@ -3,6 +3,7 @@
             [validateur.validation :refer [valid?]]))
 
 (defmulti get-task #(keyword (:type %1)))
+(defmulti task-defaults #(keyword (:type %1)))
 
 (defrecord TaskResult [succeeded? changed? data])
 
@@ -33,6 +34,9 @@
        (alter-meta! #'~type #(assoc %1 :doc-type :task))
 
        (defdocs (meta #'~type))
+
+       (defmethod matross.tasks.core/task-defaults (keyword '~type) [spec#]
+         (get (meta #'~type) :defaults))
 
        (defmethod matross.tasks.core/get-task (keyword '~type) [spec#]
          (reify

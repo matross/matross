@@ -1,9 +1,9 @@
 (ns matross.executor
   (:require [matross.config :refer [config-resolver]]
-            [matross.strata :refer [strata-fifo]]
+            [matross.strata :refer [strata-fifo strata-lifo enable-debug stratum]]
             [matross.util :refer [prepare]]
             [matross.plugins :refer [load-plugins!]]
-            [matross.tasks.core :refer [get-task exec]]
+            [matross.tasks.core :refer [get-task task-defaults exec]]
             [matross.connections.core :refer [connect disconnect]]
             [matross.connections.debug :refer [debug-connection debug-process]]))
 
@@ -12,11 +12,18 @@
     (debug-connection conn)
     conn))
 
+
+(defn task-strata [spec]
+  (-> (strata-lifo)
+      (enable-debug)
+      (conj (stratum "Hardcoded task default" (task-defaults spec)))
+      (conj (stratum "Provided task configuration" spec))))
+
 (defn test-run-connection! [base-config conn tasks]
   (connect conn)
   (reduce-kv (fn [previous k task]
                (let [config (assoc base-config
-                              :task {:current task}
+                              :task {:current (task-strata task)}
                               :previous previous)
                      resolver (config-resolver config)
                      task-instance (get-task (:task/current resolver))
