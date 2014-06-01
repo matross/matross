@@ -42,8 +42,7 @@
          (reify
            matross.tasks.core/ITask
            (exec [_# conn#]
-             (let [spec# (merge (get (meta #'~type) :defaults {}) spec#)
-                   validator# (:validator (meta #'~type))
+             (let [validator# (:validator (meta #'~type))
                    valid# (if validator# (valid? validator# spec#) true)]
 
                (if valid#
@@ -51,4 +50,5 @@
                  (throw (IllegalArgumentException. (pr-str (validator# spec#))))))))))))
 
 (defn run-task [conn conf]
-  (exec (get-task conf) conn))
+  (let [defaults (task-defaults conf)]
+    (exec (get-task (merge defaults conf)) conn)))
